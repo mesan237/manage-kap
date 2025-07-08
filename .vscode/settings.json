@@ -3,7 +3,7 @@
   "editor.formatOnSave": true,
   "editor.formatOnSaveMode": "file",                  // applies to whole file :contentReference[oaicite:3]{index=3}
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true                      // lets ESLint run fixes (including Prettier) :contentReference[oaicite:4]{index=4}
+    "source.fixAll.eslint": "explicit"
   },
   "eslint.format.enable": true,
   "eslint.validate": [
