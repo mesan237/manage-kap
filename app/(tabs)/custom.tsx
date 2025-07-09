@@ -1,12 +1,12 @@
 import { View, Text } from 'react-native';
 import React from 'react';
 
-const Goals = () => {
+const Custom = () => {
   return (
     <View>
-      <Text>Goals</Text>
+      <Text>Custom</Text>
     </View>
   );
 };
 
-export default Goals;
+export default Custom;

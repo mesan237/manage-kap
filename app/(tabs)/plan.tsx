@@ -2,12 +2,12 @@ import { View, Text } from 'react-native';
 import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const Analysis = () => {
+const Planning = () => {
   return (
     <SafeAreaView>
-      <Text>Analysis</Text>
+      <Text>Planning</Text>
     </SafeAreaView>
   );
 };
 
-export default Analysis;
+export default Planning;
