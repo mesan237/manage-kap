@@ -2,6 +2,7 @@ import { View, Text, Image } from 'react-native';
 import React from 'react';
 import { Tabs } from 'expo-router';
 import { icons } from './../../constants/icons';
+import HomeLogo from './../../assets/icons/home.svg';
 
 const TabLayout = () => {
   return (
@@ -10,7 +11,8 @@ const TabLayout = () => {
         options={{
           title: 'Home',
           headerShown: false,
-          tabBarIcon: () => <Image source={{ uri: icons.home }} className="size-6" />,
+          //   tabBarIcon: () => <Image source={{ uri: icons.home }} className="size-6" />,
+          tabBarIcon: () => <HomeLogo className="size-6" />,
         }}
         name="index"
       />

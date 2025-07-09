@@ -1,5 +1,5 @@
-import home from '../assets/images/house.svg';
+import Home from '../assets/images/house.svg';
 
-export const icons = {
-  home,
+export const Icons = {
+  Home,
 };
