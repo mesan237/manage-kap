@@ -1,14 +1,27 @@
 import { Icons } from '@/constants/icons';
 import React from 'react';
-import { Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { HistoryTransaction } from '../components/HistoryTransaction';
-
+import { createShadow } from '@/helpers/styleHelper';
+import { BodyText, Heading, Subheading } from '../components/StyleText';
+import { useFonts, Inter_900Black, Inter_400Regular } from '@expo-google-fonts/inter';
 const Index = () => {
+  let [fontsLoaded] = useFonts({
+    Inter_900Black,
+    Inter_400Regular,
+  });
+
+  if (!fontsLoaded) {
+    return null;
+  }
   return (
-    <SafeAreaView>
-      <View className="mx-5 flex flex-row justify-between items-center p-5 bg-primary rounded-md shadow-custom-1 shadow-[0_4px_6px_-1px_rgba(0,0,255,0.1)]">
-        <Text className="text-white text-sm ">
+    <SafeAreaView className="bg-white">
+      <View
+        className="mx-5 flex flex-row justify-between items-center p-5 bg-primary rounded-md"
+        style={styles.errorShadow}
+      >
+        <Text className="text-white text-sm shadow">
           Good Morning,
           <Text className="text-sm font-bold text-white"> Abed</Text>
         </Text>
@@ -18,24 +31,31 @@ const Index = () => {
         </View>
       </View>
 
+      {/* <View className='"mx-5 mt-10 bg-primary p-5 rounded-[1.5rem] shadow-2xl shadow-blue-900 h-48 absolute' /> */}
       <View
-        className="mx-5 mt-10 bg-primary p-5 rounded-[2rem] shadow-custom-2"
-        style={{
-          boxShadow: '0 5px 100px rgba(154,160,185,.05), 0 15px 40px rgba(166,173,201,.2)',
-          elevation: 5,
-          borderRadius: 10,
-          backgroundColor: '#1e293b', // Tailwind's bg-primary
-        }}
+        style={[
+          {
+            backgroundColor: '#1e2b',
+            borderRadius: 8,
+            padding: 16,
+            ...createShadow(10),
+            // backgroundColor: '#1e293b', // Tailwind's bg-primary
+          },
+          ,
+        ]}
+        className="mx-5 mt-10  p-5 rounded-[1rem]  "
       >
         <Text className="text-white text-lg font-bold">Your Balance</Text>
-        <Text className="text-white text-2xl font-bold mt-2">FCFA 1,000.000</Text>
+        <Heading style={{}}>Your Balance</Heading>
+
+        <BodyText>FCFA 1,000.000</BodyText>
         {/* income */}
         <View className="flex flex-row justify-between items-center mt-5">
           <View className="flex flex-col">
             <View className="flex flex-row items-center gap-2">
               <Text className="text-white text-base">Income</Text>
               <View className="bg-white/25 rounded-full p-1">
-                <Icons.MoveDown height={8} width={8} color="#0d0" strokeWidth={4} />
+                <Icons.MoveDown height={8} width={8} color="#1e2b" strokeWidth={4} />
               </View>
             </View>
             <Text className="text-white text-sm font-bold">FCFA 600,000</Text>
@@ -53,16 +73,42 @@ const Index = () => {
       </View>
 
       <View className="mx-5 mt-10 shadow-[0_5px_10px_rgba(154,160,185,0.05),0_15px_40px_rgba(166,173,201,0.2)] rounded-[2rem]">
-        <Text className=" text-lg font-bold">Recent Transactions</Text>
+        <Subheading>Recent Transactions</Subheading>
 
         <View className="mt-5">
-          <HistoryTransaction title="Salary" date="2, jan 2025" entry={600000} type="income" />
-          <HistoryTransaction title="Groceries" date="2, jan 2025" entry={50000} type="expense" />
-          <HistoryTransaction title="Utilities" date="2, jan 2025" entry={20000} type="expense" />
+          <HistoryTransaction
+            title="Salary"
+            date="2, jan 2025"
+            entry={600000}
+            type="income"
+            category="salary"
+          />
+          <HistoryTransaction
+            title="ingredients for cooking"
+            date="2, jan 2025"
+            entry={50000}
+            type="expense"
+            category="Groceries"
+          />
+          <HistoryTransaction
+            title="Utilities"
+            date="2, jan 2025"
+            entry={20000}
+            type="expense"
+            category="Tools"
+          />
         </View>
       </View>
     </SafeAreaView>
   );
 };
 
+const styles = StyleSheet.create({
+  defaultShadow: {
+    boxShadow: '0px 0px 2px 0px rgba(111,182,134,0,3)',
+  },
+  errorShadow: {
+    boxShadow: '0px 0px 0px 2px rgba(248,180,180,0,6)',
+  },
+});
 export default Index;
