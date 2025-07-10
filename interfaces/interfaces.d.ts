@@ -3,4 +3,5 @@ interface HistoryTransactionProps {
   date: string;
   entry: number;
   type: 'income' | 'expense';
+  category: string;
 }

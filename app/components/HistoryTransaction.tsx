@@ -1,38 +1,57 @@
 import { View, Text } from 'react-native';
 import React from 'react';
+import { BodyText, InfoText } from './StyleText';
+import { Icons } from '@/constants/icons';
 
 interface HistoryTransactionProps {
   title: string;
   category: string;
-  date: string;
   entry: number;
   type: 'income' | 'expense';
 }
 
-export const HistoryTransaction = ({
-  title,
-  date,
-  entry,
-  type,
-  category,
-}: HistoryTransactionProps) => {
+// generate a random color
+const generateRandomColor = () => {
+  const letters = '0123456789ABCDEF';
+  let color = '#';
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+};
+
+// generate random color a bit darker
+const generateRandomDarkColor = () => {};
+
+export const HistoryTransaction = ({ title, entry, type, category }: HistoryTransactionProps) => {
   return (
     <View className="flex flex-row justify-between items-center mb-3 shadow">
-      <View className="flex">
-        <Text
-          style={{ shadowOpacity: 0.25 }}
-          className=" text-sm font-bold capitalize shadow-dark-200 shadow"
-          // style={{ '--shadow-opacity': '0.25' }}
+      <View className="flex flex-row gap-2">
+        <View
+          style={{ backgroundColor: generateRandomColor() }}
+          className="rounded-2xl shadow-xl w-12 h-12 flex items-center justify-center mb-1"
         >
-          {title}{' '}
-        </Text>
-        <Text className=" text-sm font-bold text-gray-400">{category} </Text>
+          {/* <Text className="text-white font-bold text-lg">{category.charAt(0).toUpperCase()}</Text> */}
+          <Icons.Account height={18} width={18} color="#fff" strokeWidth={2.5} className="" />
+        </View>
+        <View className="flex justify-center gap-1">
+          <BodyText
+            style={{ shadowOpacity: 0.25 }}
+            className=" text-sm font-bold capitalize shadow-dark-200 shadow"
+          >
+            {title}{' '}
+          </BodyText>
+          <InfoText className=" ">{category} </InfoText>
+        </View>
       </View>
-      <View className="flex">
-        <Text className={`font-bold ${type === 'income' ? 'text-green-500' : 'text-red-500'}`}>
-          {type === 'income' ? '+' : '-'} FCFA {entry}
-        </Text>
-        <Text className="text-sm text-gray-500 font-semibold self-end ">{date}</Text>
+      <View className="flex justify-center gap-1">
+        <BodyText
+          style={{ color: type === 'income' ? '#16a34a' : '#dc2626', shadowOpacity: 0.25 }}
+          className={`font-bold self-start text-sm`}
+        >
+          {type === 'income' ? '+' : '-'} <Text className="text-sm">FCFA</Text> {entry}
+        </BodyText>
+        <InfoText className=" self-end">{'cash'} </InfoText>
       </View>
     </View>
   );

@@ -32,6 +32,7 @@ export const FONT_SIZES = {
 
 export const FONT_WEIGHTS = {
   bold: 'bold' as 'bold',
+  semiBold: '600' as '600',
   medium: '500' as '500',
   regular: 'normal' as 'normal',
 } as const;

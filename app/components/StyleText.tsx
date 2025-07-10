@@ -7,40 +7,52 @@ type HeadingProps = {
   style?: StyleProp<TextStyle>;
 } & TextProps;
 
-export const Heading = ({ children, style, ...props }: HeadingProps) => (
-  <Text style={[styles.heading, style]} {...props}>
+export const Heading = ({ children, style, className, ...props }: HeadingProps) => (
+  <Text style={[styles.heading, style]} className={className} {...props}>
     {children}
   </Text>
 );
-export const Subheading = ({ children, style, ...props }: HeadingProps) => (
-  <Text style={[styles.subheading, style]} {...props}>
+export const Subheading = ({ children, style, className, ...props }: HeadingProps) => (
+  <Text style={[styles.subheading, style]} className={className} {...props}>
     {children}
   </Text>
 );
-export const BodyText = ({ children, style, ...props }: HeadingProps) => (
-  <Text style={[styles.body, style]} {...props}>
+export const BodyText = ({ children, style, className, ...props }: HeadingProps) => (
+  <Text style={[styles.body, style]} className={className} {...props}>
+    {children}
+  </Text>
+);
+
+export const InfoText = ({ children, style, className, ...props }: HeadingProps) => (
+  <Text style={[styles.info, style]} className={className} {...props}>
     {children}
   </Text>
 );
 
 const styles = StyleSheet.create({
   heading: {
-    fontFamily: 'Inter_400Regular',
-    fontSize: FONT_SIZES.xl,
-    fontWeight: FONT_WEIGHTS.bold,
+    fontFamily: 'Inter-Var-Bold',
+    fontSize: FONT_SIZES.lg,
     color: COLORS.text,
     marginBottom: SPACING.sm,
   },
   subheading: {
-    fontFamily: 'Inter_900Black',
-    fontSize: FONT_SIZES.lg,
-    fontWeight: FONT_WEIGHTS.medium,
+    fontFamily: 'Inter-Var-SemiBold',
+    fontSize: FONT_SIZES.md,
     color: COLORS.text,
     marginBottom: SPACING.sm,
   },
   body: {
-    fontFamily: 'Inter_900Black',
-    fontSize: FONT_SIZES.md,
+    fontFamily: 'Inter-Var-SemiBold',
+    fontWeight: FONT_WEIGHTS.semiBold,
+    fontSize: FONT_SIZES.sm,
+    color: COLORS.text,
+  },
+
+  info: {
+    fontFamily: 'Inter-Var-Medium',
+    fontWeight: FONT_WEIGHTS.medium,
+    fontSize: FONT_SIZES.sm,
     color: COLORS.textLight,
   },
 });

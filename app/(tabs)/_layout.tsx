@@ -36,6 +36,12 @@ const TabLayout = () => {
         // },
         headerShown: false,
         animation: 'shift',
+        tabBarItemStyle: {
+          height: '100%',
+          width: '100%',
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
       }}
     >
       <Tabs.Screen
