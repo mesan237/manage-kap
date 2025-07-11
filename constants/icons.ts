@@ -7,6 +7,9 @@ import Add from '@/assets/images/plus.svg';
 import MoveDown from '@/assets/images/move-down.svg';
 import MoveUp from '@/assets/images/move-up.svg';
 import Notification from '@/assets/images/bell-ring.svg';
+import Calendar from '@/assets/images/calendar-days.svg';
+import ChevronLeft from '@/assets/images/chevron-left.svg';
+import ChevronRight from '@/assets/images/chevron-right.svg';
 
 export const Icons = {
   Home,
@@ -18,4 +21,7 @@ export const Icons = {
   MoveDown,
   MoveUp,
   Notification,
+  Calendar,
+  ChevronRight,
+  ChevronLeft,
 };

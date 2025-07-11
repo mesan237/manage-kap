@@ -2,7 +2,6 @@ import { View, Text, Image, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { Tabs } from 'expo-router';
 import { Icons } from '@/constants/icons';
-import { SpecialTabButton } from '../components/SpecialTabButton';
 
 const styles = {
   button: {
@@ -34,6 +33,10 @@ const TabLayout = () => {
         //   elevation: 0,
         //   shadowOpacity: 0,
         // },
+        tabBarStyle: {
+          marginTop: 12,
+        },
+
         headerShown: false,
         animation: 'shift',
         tabBarItemStyle: {
