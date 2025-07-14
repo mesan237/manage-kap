@@ -31,15 +31,15 @@ export const HistoryTransaction = ({ title, entry, type, category }: HistoryTran
           <Icons.Account height={18} width={18} color="#fff" strokeWidth={2.5} className="" />
         </View>
         <View className="flex justify-between gap-0.5">
-          <BodyText className="  capitalize">{title} </BodyText>
+          <BodyText className=" first-letter:uppercase">{title} </BodyText>
           <InfoText className=" ">{category} </InfoText>
         </View>
       </View>
       <View className="flex justify-between gap-0.5">
         <BodyText
-          className={` self-start ${type === 'income' ? 'text-green-500' : 'text-red-500'}  shadow-dark-200 shadow`}
+          className={`tracking-wide self-start ${type === 'income' ? 'text-green-500' : 'text-red-500'}  shadow-dark-200 shadow`}
         >
-          {type === 'income' ? '+' : '-'} <Text className="text-xs">FCFA</Text> {entry}
+          {type === 'income' ? '+' : '-'} {entry}
         </BodyText>
         <InfoText className=" self-end">{'cash'} </InfoText>
       </View>
