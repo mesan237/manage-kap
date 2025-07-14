@@ -6,76 +6,52 @@ const Calculator = () => {
   const { width } = useWindowDimensions();
   const totalHorizontalPadding = 24 + 24 + 24; // Assuming 24px padding on both sides
   const usableWidth = width - totalHorizontalPadding;
-  const buttonWidth = usableWidth / 4; // Assuming 4 buttons per row
+  const buttonWidth = usableWidth / 5; // Assuming 4 buttons per row
 
   const calculatorButton = [
-    { value: 7, type: 'number' },
-    { value: 8, type: 'number' },
-    { value: 9, type: 'number' },
     { value: '/', type: 'divide' },
-    { value: 4, type: 'number' },
-    { value: 5, type: 'number' },
-    { value: 6, type: 'number' },
     { value: 'X', type: 'multiply' },
-    { value: 1, type: 'number' },
-    { value: 2, type: 'number' },
-    { value: 3, type: 'number' },
     { value: '+', type: 'add' },
-    { value: 0, type: 'number' },
-    { value: 'C', type: 'cancel' },
     { value: '-', type: 'subtract' },
     { value: '=', type: 'equal' },
   ];
 
   const [computedValue, setComputedValue] = React.useState<string | number>(0);
-  const [inputValue, setInputValue] = React.useState<string | number>('0');
+  const [inputValue, setInputValue] = React.useState<string | number>('');
 
-  const multiplyBy = (value: number) => {
-    return (num: number) => {
-      return num * value;
-    };
-  };
-
-  const add = (value: number) => {
-    return (num: number) => {
-      return num + value;
-    };
-  };
-  const subtract = (value: number) => {
-    return (num: number) => {
-      return num - value;
-    };
-  };
-  // value should be different from 0
-  const divideBy = (value: number) => {
-    return (num: number) => {
-      if (value === 0) throw new Error('Cannot divide by zero');
-      return num / value;
-    };
-  };
-
-  const handleComputation = (value: number, type: string) => {
-    let cache = value;
-    if (type === 'number') {
-      setInputValue((prev) => (prev === '0' ? value.toString() : prev + value.toString()));
-      console.log(value);
-      setComputedValue(value);
-    } else if (type === 'cancel') {
-      setComputedValue(0);
-    } else if (type === 'equal') {
-      // Implement equal logic here
-      // For now, just reset to 0
-      setComputedValue(0);
-    } else {
-      // Handle other operations like add, subtract, multiply, divide
-      // This is a placeholder for actual computation logic
-      if (type === 'multiply') {
-        cache = multiplyBy(inputValue as number)(computedValue as number);
+  const handleComputation = (type: string) => {
+    setInputValue((prev) => {
+      if (type === 'cancel') {
+        return '0';
+      } else if (type === 'equal') {
+        try {
+          // eslint-disable-next-line no-eval
+          const p = prev.toString().replace(/\s+/g, '');
+          if (p === '0') return '0';
+          const result = eval(p.replace('X', '*').replace('/', '/'));
+          return result.toString();
+        } catch (error) {
+          console.error('Error in computation:', error);
+          return prev;
+        }
+      } else if (
+        type === 'add' ||
+        type === 'subtract' ||
+        type === 'multiply' ||
+        type === 'divide'
+      ) {
+        return prev + `${calculatorButton.find((btn) => btn.type === type)?.value}`;
       }
-      console.log(cache);
-      console.log(`Operation: ${type}, Value: ${value}`);
-    }
+      return prev;
+    });
   };
+
+  const cursor = React.useRef<TextInput>(null);
+  React.useEffect(() => {
+    if (cursor.current) {
+      cursor.current.focus();
+    }
+  }, []);
 
   return (
     <View className="flex-1 items-center justify-center p-4 bg-gray-200 rounded-lg ">
@@ -84,9 +60,32 @@ const Calculator = () => {
       <View className="p-2 bg-gray-100 rounded-lg shadow-md  w-full">
         <View className="bg-white px-4 py-2 rounded-lg shadow-md mb-4">
           <TextInput
-            className="text-xxl font-bold text-right"
+            ref={cursor}
+            keyboardType="numeric"
+            autoFocus
+            placeholder="0"
+            placeholderTextColor="#999"
+            selectTextOnFocus={false}
+            autoCorrect={false}
+            autoCapitalize="none"
+            // keyboard for computation
+            multiline={false}
+            scrollEnabled={false}
+            maxLength={20}
+            blurOnSubmit={false}
+            returnKeyType="done"
+            returnKeyLabel="Done"
+            onSubmitEditing={() => {
+              if (cursor.current) {
+                cursor.current.blur();
+              }
+            }}
+            className="text-xxl font-bold text-right overflow-hidden"
             value={inputValue.toString()}
-            onChangeText={setInputValue}
+            onChange={(e) => {
+              setInputValue(e.nativeEvent.text);
+              console.log(e.nativeEvent.text);
+            }}
           />
           {/* <Text className=""></Text> */}
         </View>
@@ -95,11 +94,11 @@ const Calculator = () => {
           {calculatorButton.map((itemButton, index) => (
             <TouchableOpacity
               key={index}
-              onPress={(value) => {
-                handleComputation(itemButton.value as number, itemButton.type);
+              onPress={() => {
+                handleComputation(itemButton.type);
               }}
               style={{ flexBasis: buttonWidth }}
-              className="bg-white py-2 px-4 rounded-lg shadow-md flex-1 items-center justify-center"
+              className="bg-white py-2 px-4 rounded-lg shadow-md flex-1 items-center justify-center "
             >
               <Text className="text-xl font-bold">{itemButton.value}</Text>
             </TouchableOpacity>
