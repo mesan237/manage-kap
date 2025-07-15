@@ -54,8 +54,10 @@ const Calculator = () => {
   }, []);
 
   return (
-    <View className="flex-1 items-center justify-center p-4 bg-gray-200 rounded-lg ">
-      <Text>Calculator Component</Text>
+    <View className="flex-1 items-center justify-center p-4  ">
+      <Text style={{ fontFamily: 'Inter-Var-Bold' }} className="text-lg self-start">
+        Amount (FCFA)
+      </Text>
       {/* Add your calculator UI here */}
       <View className="p-2 bg-gray-100 rounded-lg shadow-md  w-full">
         <View className="bg-white px-4 py-2 rounded-lg shadow-md mb-4">
@@ -80,12 +82,13 @@ const Calculator = () => {
                 cursor.current.blur();
               }
             }}
-            className="text-xxl font-bold text-right overflow-hidden"
+            className="text-xxl text-right overflow-hidden"
             value={inputValue.toString()}
             onChange={(e) => {
               setInputValue(e.nativeEvent.text);
               console.log(e.nativeEvent.text);
             }}
+            style={{ fontFamily: 'Inter-Var-Bold' }}
           />
           {/* <Text className=""></Text> */}
         </View>
@@ -100,7 +103,9 @@ const Calculator = () => {
               style={{ flexBasis: buttonWidth }}
               className="bg-white py-2 px-4 rounded-lg shadow-md flex-1 items-center justify-center "
             >
-              <Text className="text-xl font-bold">{itemButton.value}</Text>
+              <Text className="text-xl" style={{ fontFamily: 'Inter-Var-Bold' }}>
+                {itemButton.value}
+              </Text>
             </TouchableOpacity>
           ))}
         </View>

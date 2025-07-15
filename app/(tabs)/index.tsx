@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFonts } from 'expo-font';
 
@@ -8,9 +8,8 @@ import { HistoryTransaction } from '../components/HistoryTransaction';
 import { createShadow } from '@/helpers/styleHelper';
 import { BodyText, Heading, InfoText, Subheading } from '../components/StyleText';
 
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import SelectDropdown from 'react-native-select-dropdown';
+import CustomSelectDropdown from '../components/CustomSelectDropdown';
 
 const Index = () => {
   let [fontsLoaded] = useFonts({
@@ -114,47 +113,22 @@ const Index = () => {
         </View>
       </View>
 
-      <View className="flex flex-row justify-between items-center mx-5 mt-5">
-        <SelectDropdown
-          data={[{ title: 'Daily' }, { title: 'Weekly' }, { title: 'Monthly' }]}
+      <View className="flex flex-row justify-between items-center mx-5 mt-5 gap-0.5">
+        <CustomSelectDropdown
+          datas={['Daily', 'Weekly', 'Monthly']}
+          defaultValue="Monthly"
           onSelect={(selectedItem, index) => {
             console.log(selectedItem, index);
           }}
-          renderButton={(selectedItem, isOpened) => {
-            return (
-              <View style={styles.dropdownButtonStyle}>
-                <Text style={styles.dropdownButtonTxtStyle}>
-                  {(selectedItem && selectedItem.title) || 'Monthly'}
-                </Text>
-                <Icon
-                  name={isOpened ? 'chevron-up' : 'chevron-down'}
-                  style={styles.dropdownButtonArrowStyle}
-                />
-              </View>
-            );
-          }}
-          renderItem={(item, index, isSelected) => {
-            return (
-              <View
-                style={{
-                  ...styles.dropdownItemStyle,
-                  ...(isSelected && { backgroundColor: '#D2D9DF' }),
-                }}
-              >
-                <Text style={styles.dropdownItemTxtStyle}>{item.title}</Text>
-              </View>
-            );
-          }}
-          showsVerticalScrollIndicator={false}
-          dropdownStyle={styles.dropdownMenuStyle}
         />
+
         <View>
           <View className="flex flex-row gap-0">
             <TouchableOpacity
               onPress={() => {
                 handleDateChangeOff(transactionDate);
               }}
-              className="px-3 py-2 bg-[#E9ECEF] rounded-l-md flex items-center justify-center"
+              className=" bg-[#e5e7eb] rounded-l-md flex items-center justify-center p-3.5"
             >
               <Icons.ChevronLeft width={14} height={14} color="#131313" strokeWidth={3} />
             </TouchableOpacity>
@@ -214,58 +188,5 @@ const Index = () => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  dropdownButtonStyle: {
-    width: 100,
-    height: 40,
-    backgroundColor: '#E9ECEF',
-    borderRadius: 8,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-    borderWidth: 1,
-    borderColor: '#E9EDEF',
-    // ...createShadow(4),
-  },
-  dropdownButtonTxtStyle: {
-    flex: 1,
-    fontSize: 14,
-    fontFamily: 'Inter-Var-Medium',
-    fontWeight: '500',
-    color: '#151E26',
-  },
-  dropdownButtonArrowStyle: {
-    fontSize: 20,
-  },
-  dropdownButtonIconStyle: {
-    fontSize: 24,
-    marginRight: 8,
-  },
-  dropdownMenuStyle: {
-    backgroundColor: '#E9ECEF',
-    borderRadius: 8,
-  },
-  dropdownItemStyle: {
-    width: '100%',
-    flexDirection: 'row',
-    paddingHorizontal: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 8,
-  },
-  dropdownItemTxtStyle: {
-    flex: 1,
-    fontSize: 14,
-    fontFamily: 'Inter-Var',
-    fontWeight: '500',
-    color: '#151E26',
-  },
-  dropdownItemIconStyle: {
-    fontSize: 24,
-    marginRight: 8,
-  },
-});
 
 export default Index;
