@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFonts } from 'expo-font';
 
 import { Icons } from '@/constants/icons';
-import { HistoryTransaction } from '../components/HistoryTransaction';
+import { HistoryTransaction, TransactionItem } from '../components/HistoryTransaction';
 import { createShadow } from '@/helpers/styleHelper';
 import { BodyText, Heading, InfoText, Subheading } from '../components/StyleText';
 
@@ -56,7 +56,7 @@ const Index = () => {
   }
 
   return (
-    <SafeAreaView className="bg-[#f9f9f9]">
+    <SafeAreaView className="bg-[#f9f9f9]" edges={['top', 'left', 'right']}>
       <View className="flex flex-row justify-between items-center m-5 mb-0 rounded-md">
         <View className="flex justify-center gap-0.5">
           <InfoText className="  capitalize">Welcome Back, </InfoText>

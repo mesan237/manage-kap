@@ -1,4 +1,4 @@
-import { Platform } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 
 export function createShadow(
   elevation = 2,
@@ -19,3 +19,18 @@ export function createShadow(
     },
   });
 }
+
+export const styles = StyleSheet.create({
+  textBold: {
+    fontFamily: 'Inter-Var-Bold',
+  },
+  textRegular: {
+    fontFamily: 'Inter-Var-Regular',
+  },
+  textMedium: {
+    fontFamily: 'Inter-Var-Medium',
+  },
+  textSemibold: {
+    fontFamily: 'Inter-Var-Semibold',
+  },
+});

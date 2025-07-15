@@ -1,10 +1,10 @@
-import { View, Text, Dimensions, PixelRatio, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { useWindowDimensions } from 'react-native';
 
 const Calculator = () => {
   const { width } = useWindowDimensions();
-  const totalHorizontalPadding = 24 + 24 + 24; // Assuming 24px padding on both sides
+  const totalHorizontalPadding = 24 + 24 + 24 + 24 + 100; // Assuming 24px padding on both sides
   const usableWidth = width - totalHorizontalPadding;
   const buttonWidth = usableWidth / 5; // Assuming 4 buttons per row
 
@@ -51,20 +51,39 @@ const Calculator = () => {
     if (cursor.current) {
       cursor.current.focus();
     }
-  }, []);
+  }, [inputValue]);
 
   return (
-    <View className="flex-1 items-center justify-center p-4  ">
-      <Text style={{ fontFamily: 'Inter-Var-Bold' }} className="text-lg self-start">
+    <View className="flex-1 items-center justify-center p-4">
+      <Text style={{ fontFamily: 'Inter-Var-Bold' }} className="text-md self-start">
         Amount (FCFA)
       </Text>
+
       {/* Add your calculator UI here */}
-      <View className="p-2 bg-gray-100 rounded-lg shadow-md  w-full">
-        <View className="bg-white px-4 py-2 rounded-lg shadow-md mb-4">
+      <View className="p-2 bg-gray-100 rounded-lg shadow-md  w-full flex-col-reverse">
+        <View className="p-0 bg-gray-100 rounded-lg flex flex-row gap-2 flex-wrap justify-between ">
+          {calculatorButton.map((itemButton, index) => (
+            <TouchableOpacity
+              key={index}
+              onPress={() => {
+                handleComputation(itemButton.type);
+              }}
+              style={{ flexBasis: buttonWidth }}
+              className="bg-white py-2 px-4 rounded-lg shadow-md flex-1 items-center justify-center "
+            >
+              <Text className="text-xl" style={{ fontFamily: 'Inter-Var-Bold' }}>
+                {itemButton.value}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+
+        <View className="bg-white px-4 py-2 rounded-lg shadow-md mb-4 flex ">
           <TextInput
             ref={cursor}
             keyboardType="numeric"
             autoFocus
+            textContentType="telephoneNumber"
             placeholder="0"
             placeholderTextColor="#999"
             selectTextOnFocus={false}
@@ -82,7 +101,7 @@ const Calculator = () => {
                 cursor.current.blur();
               }
             }}
-            className="text-xxl text-right overflow-hidden"
+            className="text-xl text-right overflow-hidden"
             value={inputValue.toString()}
             onChange={(e) => {
               setInputValue(e.nativeEvent.text);
@@ -91,23 +110,6 @@ const Calculator = () => {
             style={{ fontFamily: 'Inter-Var-Bold' }}
           />
           {/* <Text className=""></Text> */}
-        </View>
-
-        <View className="p-0 bg-gray-100 rounded-lg flex flex-row gap-2 flex-wrap justify-between">
-          {calculatorButton.map((itemButton, index) => (
-            <TouchableOpacity
-              key={index}
-              onPress={() => {
-                handleComputation(itemButton.type);
-              }}
-              style={{ flexBasis: buttonWidth }}
-              className="bg-white py-2 px-4 rounded-lg shadow-md flex-1 items-center justify-center "
-            >
-              <Text className="text-xl" style={{ fontFamily: 'Inter-Var-Bold' }}>
-                {itemButton.value}
-              </Text>
-            </TouchableOpacity>
-          ))}
         </View>
       </View>
     </View>

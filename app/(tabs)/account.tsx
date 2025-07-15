@@ -1,268 +1,230 @@
-import { View, Text } from 'react-native';
-import React from 'react';
+import { View, Text, TouchableOpacity, ScrollView, Dimensions, TextInput } from 'react-native';
+import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import EmojiPicker, { EmojiType } from 'rn-emoji-keyboard';
+import { Alert } from 'react-native';
 
-// Inspiration: https://dribbble.com/shots/16367172-Social-media-app-UI-screen
+import { v4 as uuidv4 } from 'uuid'; // For generating UUIDs for mock data
 
-/*
-    Inspiration: https://dribbble.com/shots/14891203-Banking-Mobile-App
-*/
-import { FlatList, Dimensions, _ScrollView } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
-import colors from 'nice-color-palettes';
-
-import { faker } from '@faker-js/faker';
-
-faker.seed(10);
-import Animated, {
-  interpolate,
-  useAnimatedScrollHandler,
-  useAnimatedStyle,
-  useSharedValue,
-} from 'react-native-reanimated';
-
-const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
-
-/*
-  Here we have a FlatList + a full screen component
-  The FlatList will start from index 1 instead of index 0 because on index 0 we have a dummy element
-  that will trigger the fullscreen element when it's "visible", basically this means that if the user
-  will scroll from index 1 to index 0, we will animate the CustomScreen to stretch the entire device screen
-  and also show the inside content.
-
-  The dummy screen is inside the flatlist, initially it has the width as the rest of the elements from the FlatList.
-  When the FlatList is scrolled to index 0, this dummy element will grow so that the rest of the FlatList elements will not
-  appear in the viewport.
-  index = [0, 1, 2]
-  width = [width, _width, _width]
-*/
-
-const data = [...Array(10).keys()].map((i) => ({
-  key: faker.string.uuid(),
-  bg: faker.helpers.arrayElement(colors), // randomize already picks one from the array
-  mask: faker.finance.creditCardNumber(),
-  amount: faker.finance.amount(100, 5000, 2, '$'),
-}));
-
-data.unshift({
-  key: 'dummy',
-  bg: 'transparent',
-});
-
-const { width, height } = Dimensions.get('screen');
-const _width = width * 0.7;
-const _height = width * 1.1;
-const _spacing = 10;
-const _threshold = 100;
-const _cellSize = _width + _spacing * 2;
-const _keySize = width / 3;
-const _keyz = [...Array(10).keys()].map((i) => 9 - i);
-
-const CustomScreen = ({ animatedValue, isActive }) => {
-  const stylez = useAnimatedStyle(() => {
-    // because initial height is _height * .7, we need to apply a marginTop to align the item to the
-    // center of the flatlist items.
-    // flatlist item height: _height
-    // initial dummy element item height: _height * .7
-    // marginTop to align the item to the center _height * .3 / 2 or _height * .15;
-    const diffHeight = _height * 0.3;
-    const thresholdX = -(width - _cellSize) / 4 + _spacing;
-    return {
-      transform: [
-        {
-          // move the element along with the scrollX of the FlatList
-          translateX: interpolate(
-            animatedValue.value,
-            [0, _cellSize, _cellSize + 1, _cellSize + 2],
-            [0, -thresholdX, -thresholdX - 1, -thresholdX - 2]
-          ),
-        },
-      ],
-      // opacity -> 0 after scrolling the second item
-      opacity: interpolate(animatedValue.value, [0, _cellSize, _cellSize * 1.5], [1, 1, 0]),
-      margin: interpolate(
-        animatedValue.value,
-        [-1, 0, _width, _cellSize * 2],
-        [0, 0, _spacing, _spacing]
-      ),
-      borderRadius: interpolate(
-        animatedValue.value,
-        [-1, 0, _width, _cellSize * 2],
-        [0, 0, 30, 30]
-      ),
-      marginTop: interpolate(
-        animatedValue.value,
-        [-1, 0, _width, _cellSize * 2],
-        [0, 0, diffHeight / 2, diffHeight / 2]
-      ),
-
-      width: interpolate(
-        animatedValue.value,
-        [-1, 0, _width, _cellSize * 2],
-        [width, width, _width, _width]
-      ),
-      height: interpolate(
-        animatedValue.value,
-        [-1, 0, _width, _cellSize * 2],
-        [height, height, _height - diffHeight, _height - diffHeight]
-      ),
-    };
-  });
-  const innerStyle = useAnimatedStyle(() => {
-    return {
-      opacity: interpolate(animatedValue.value, [-1, 0, _width / 2, _cellSize * 2], [1, 1, 0, 0]),
-    };
-  });
-  return (
-    <Animated.View
-      style={[{ position: 'absolute', backgroundColor: '#050833', borderRadius: 30 }, stylez]}
-    >
-      <Animated.View
-        style={[
-          innerStyle,
-          { flex: 1, padding: _spacing, alignItems: 'center', justifyContent: 'center' },
-        ]}
-      >
-        <Text style={{ fontSize: 18, color: 'green', fontFamily: 'Inter' }}>Your card number</Text>
-        <View
-          style={{
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-            width: _keySize * 3,
-            justifyContent: 'center',
-          }}
-        >
-          {_keyz.map((i) => {
-            return (
-              <View
-                key={`key-${i}`}
-                style={{
-                  width: _keySize,
-                  height: _keySize,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <Text style={{ fontSize: 32, color: 'blue', fontFamily: 'Inter' }}>{i}</Text>
-              </View>
-            );
-          })}
-        </View>
-      </Animated.View>
-    </Animated.View>
-  );
+// Mock Supabase client for demonstration purposes
+// In a real app, you would import and initialize your actual Supabase client
+const mockSupabase = {
+  from: (tableName) => ({
+    insert: async (data) => {
+      console.log(`Mock Supabase: Inserting into ${tableName}`, data);
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          if (Math.random() > 0.1) {
+            // Simulate success 90% of the time
+            resolve({ data: { id: uuidv4(), ...data }, error: null });
+          } else {
+            resolve({ data: null, error: { message: 'Mock DB insert failed' } });
+          }
+        }, 1000); // Simulate network delay
+      });
+    },
+  }),
 };
 
-const DummyItem = ({ animatedValue }) => {
-  const stylez = useAnimatedStyle(() => {
-    return {
-      // we need to make the item larger so the "flatlist" items will dissapear when dummy element
-      // is visible.
-      width: interpolate(
-        animatedValue.value,
-        [-1, 0, _cellSize, _cellSize + 1],
-        [width, width, _width, _width]
-      ),
-      margin: _spacing,
-    };
-  });
-  return <Animated.View style={stylez} />;
-};
+// Predefined color palette for category background
+const colorPalette = [
+  '#FF6B6B', // Red
+  '#4ECDC4', // Teal
+  '#45B7D1', // Light Blue
+  '#F7DC6F', // Yellow
+  '#A2D9CE', // Mint Green
+  '#BB8FCE', // Purple
+  '#F5B041', // Orange
+  '#5DADE2', // Sky Blue
+  '#2ECC71', // Emerald Green
+  '#AF7AC5', // Lavender
+];
 
-const Item = ({ animatedValue, item, index }) => {
-  const stylez = useAnimatedStyle(() => {
-    return {
-      opacity: interpolate(
-        animatedValue.value / _cellSize,
-        [index - 1, index, index + 1],
-        [0.3, 1, 0.3]
-      ),
-    };
-  });
-  return (
-    <Animated.View
-      style={[
-        {
-          backgroundColor: item.bg,
-          width: _width,
-          height: _height,
-          margin: _spacing,
-          borderRadius: 30,
-          padding: 30,
-          justifyContent: 'space-between',
-        },
-        stylez,
-      ]}
-    >
-      <Text
-        style={{
-          color: 'blue',
-          fontFamily: 'Inter',
-          fontSize: 16,
-          opacity: 0.8,
-          fontWeight: '700',
-          alignSelf: 'flex-end',
-        }}
-      >
-        **** **** **** {item.mask}
-      </Text>
-      <Text style={{ color: 'blue', fontFamily: 'Inter', fontSize: 24, fontWeight: '700' }}>
-        {item.amount}
-      </Text>
-    </Animated.View>
-  );
-};
+// Get screen width for responsive sizing
+const { width } = Dimensions.get('window');
+const colorItemSize = (width - 64) / 5; // 5 columns, with 16px padding on each side (32 total), and 8px margin between items (4 * 8 = 32)
 
-export default function Account() {
-  const animatedValue = useSharedValue(_cellSize);
-  const isActive = useSharedValue(false);
-  const onScroll = useAnimatedScrollHandler((event, ctx = { y: 0, time: Date.now() }) => {
-    const { x } = event.contentOffset;
-    if (x < -_threshold) {
-      isActive.value = true;
-    } else {
-      isActive.value = false;
+const Account = () => {
+  const [categoryName, setCategoryName] = useState('');
+  const [categoryType, setCategoryType] = useState<'Expense' | 'Income'>('Expense');
+  const [selectedEmoji, setSelectedEmoji] = useState<EmojiType | null>(null);
+  const [selectedColor, setSelectedColor] = useState<string | null>(null);
+  const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleEmojiSelect = (emoji: EmojiType) => {
+    setSelectedEmoji(emoji);
+    setIsEmojiPickerOpen(false);
+  };
+
+  const handleSaveCategory = async () => {
+    if (!categoryName.trim()) {
+      Alert.alert('Validation Error', 'Category name cannot be empty.');
+      return;
     }
-    animatedValue.value = x;
-  });
+    if (!selectedEmoji) {
+      Alert.alert('Validation Error', 'Please choose an emoji for the category.');
+      return;
+    }
+    if (!selectedColor) {
+      Alert.alert('Validation Error', 'Please choose a background color for the category.');
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      // In a real app, you'd get the user_id from Supabase auth
+      const userId = 'mock-user-uuid-123'; // Replace with actual user ID
+
+      const newCategory = {
+        user_id: userId,
+        name: categoryName.trim(),
+        type: categoryType,
+        icon: selectedEmoji.emoji, // Store the emoji character
+        bg_color: selectedColor,
+      };
+
+      const { data, error } = await mockSupabase.from('categories').insert(newCategory);
+
+      if (error) {
+        Alert.alert('Error', `Failed to add category: ${error.message}`);
+      } else {
+        Alert.alert('Success', `${categoryName} category added successfully!`);
+        // Reset form or navigate back
+        setCategoryName('');
+        setCategoryType('Expense');
+        setSelectedEmoji(null);
+        setSelectedColor(null);
+      }
+    } catch (err) {
+      console.error('Save error:', err);
+      Alert.alert('Error', 'An unexpected error occurred while saving.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
   return (
-    <View style={{ flex: 1, justifyContent: 'center' }}>
-      <View style={{ flex: 1, justifyContent: 'center' }}>
-        {/*
-                this is the element that will be displayed when FlatList will be scrolled to
-                index 0. At index 0 there's a dummy element which is not visible to the user
-                but plays the role of a placeholder. Notice that we start the FlatList
-                with scrollOffset the dummy element width.
-            */}
-        <CustomScreen animatedValue={animatedValue} isActive={isActive} />
-        <AnimatedFlatList
-          data={data}
-          keyExtractor={(item) => item.key}
-          onScroll={onScroll}
-          style={{ flexGrow: 0 }}
-          bounces={false}
-          contentContainerStyle={{
-            paddingHorizontal: (width - _cellSize) / 2,
-          }}
-          contentOffset={{
-            // we want to offset the scroll by one item so we don't display the full item element.
-            x: _cellSize,
-          }}
-          decelerationRate="fast"
-          snapToInterval={_cellSize}
-          scrollEventThrottle={16}
-          showsHorizontalScrollIndicator={false}
-          horizontal
-          renderItem={({ item, index }) => {
-            if (item.key === 'dummy') {
-              // Display the dummyitem component that plays the role of a placeholder.
-              return <DummyItem animatedValue={animatedValue} />;
-            }
-            return <Item animatedValue={animatedValue} item={item} index={index} />;
-          }}
-        />
-      </View>
-      <StatusBar hidden />
-    </View>
+    <SafeAreaView className="flex-1 bg-gray-50">
+      <ScrollView contentContainerStyle={{ padding: 20, paddingBottom: 40 }}>
+        <Text className="text-3xl font-bold text-gray-800 mb-8 text-center">Add New Category</Text>
+
+        {/* Category Name Input */}
+        <View className="mb-6">
+          <Text className="text-base font-semibold text-gray-600 mb-2">Category Name</Text>
+          <TextInput
+            className="bg-white border border-gray-300 rounded-lg p-4 text-base text-gray-800 shadow-sm"
+            placeholder="e.g., Groceries, Salary"
+            value={categoryName}
+            onChangeText={setCategoryName}
+            maxLength={50}
+          />
+        </View>
+
+        {/* Category Type Selection */}
+        <View className="mb-6">
+          <Text className="text-base font-semibold text-gray-600 mb-2">Category Type</Text>
+          <View className="flex flex-row bg-gray-200 rounded-lg overflow-hidden">
+            <TouchableOpacity
+              className={`flex-1 py-3 items-center justify-center ${
+                categoryType === 'Expense' ? 'bg-blue-600 rounded-lg' : ''
+              }`}
+              onPress={() => setCategoryType('Expense')}
+            >
+              <Text
+                className={`text-base font-medium ${
+                  categoryType === 'Expense' ? 'text-white' : 'text-gray-700'
+                }`}
+              >
+                Expense
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              className={`flex-1 py-3 items-center justify-center ${
+                categoryType === 'Income' ? 'bg-blue-600 rounded-lg' : ''
+              }`}
+              onPress={() => setCategoryType('Income')}
+            >
+              <Text
+                className={`text-base font-medium ${
+                  categoryType === 'Income' ? 'text-white' : 'text-gray-700'
+                }`}
+              >
+                Income
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Emoji Icon Selection */}
+        <View className="mb-6">
+          <Text className="text-base font-semibold text-gray-600 mb-2">Choose Icon</Text>
+          <TouchableOpacity
+            className="bg-white border border-gray-300 rounded-lg p-4 items-center justify-center min-h-[60px] shadow-sm"
+            onPress={() => setIsEmojiPickerOpen(true)}
+          >
+            {selectedEmoji ? (
+              <Text className="text-4xl">{selectedEmoji.emoji}</Text>
+            ) : (
+              <Text className="text-base text-gray-500">Tap to choose emoji</Text>
+            )}
+          </TouchableOpacity>
+        </View>
+
+        {/* Background Color Selection */}
+        <View className="mb-6">
+          <Text className="text-base font-semibold text-gray-600 mb-2">
+            Choose Background Color
+          </Text>
+          <View className="flex flex-row flex-wrap justify-between">
+            {colorPalette.map((color) => (
+              <TouchableOpacity
+                key={color}
+                style={{ backgroundColor: color, width: colorItemSize, height: colorItemSize }}
+                className={`rounded-lg my-2 border-2 border-transparent items-center justify-center shadow-sm ${
+                  selectedColor === color ? 'border-blue-600' : ''
+                }`}
+                onPress={() => setSelectedColor(color)}
+              />
+            ))}
+          </View>
+          <View className="rounded-full w-10 p-2" style={{ backgroundColor: selectedColor ?? '' }}>
+            <Text className="text-center  w-fit ">{selectedEmoji?.emoji ?? ''}</Text>
+          </View>
+        </View>
+
+        {/* Save Button */}
+        <TouchableOpacity
+          className={`py-4 rounded-lg items-center justify-center mt-8 shadow-md ${
+            isLoading ? 'bg-green-300' : 'bg-green-600'
+          }`}
+          onPress={handleSaveCategory}
+          disabled={isLoading}
+        >
+          <Text className="text-white text-lg font-bold">
+            {isLoading ? 'Saving...' : 'Save Category'}
+          </Text>
+        </TouchableOpacity>
+      </ScrollView>
+
+      {/* Emoji Picker Modal */}
+      <EmojiPicker
+        onEmojiSelected={handleEmojiSelect}
+        open={isEmojiPickerOpen}
+        onClose={() => setIsEmojiPickerOpen(false)}
+        // Optional: Customize picker appearance
+        // theme={{
+        //   backdrop: '#16161688',
+        //   container: '#fff',
+        //   header: '#fff',
+        //   skinTonesContainer: '#fff',
+        //   search: '#4d4d4d',
+        //   activeCategory: '#007bff',
+        //   inactiveCategory: '#888',
+        //   // ... more theme options
+        // }}
+      />
+    </SafeAreaView>
   );
-}
+};
+
+export default Account;
