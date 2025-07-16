@@ -1,3 +1,5 @@
+import React from 'react';
+import { SvgProps } from 'react-native-svg';
 import Home from '@/assets/images/house.svg';
 import Account from '@/assets/images/credit-card.svg';
 import Profile from '@/assets/images/user.svg';
@@ -31,7 +33,8 @@ import House from '@/assets/images/house-wifi.svg';
 import Social from '@/assets/images/users-round.svg';
 import Other from '@/assets/images/shield-half.svg';
 
-export default {
+// Define the mapping from string names (stored in DB) to SVG components
+const iconMap: { [key: string]: React.FC<SvgProps> } = {
   Home,
   Account,
   Profile,
@@ -65,3 +68,31 @@ export default {
   Other,
   Tax,
 };
+
+interface DynamicIconProps extends SvgProps {
+  name: string;
+  color?: string;
+  height: number;
+  width: number;
+  strokeWidth: number;
+}
+
+const DynamicIcon: React.FC<DynamicIconProps> = ({ name, ...props }) => {
+  // Retrieve the specific SVG component from the map based on the 'name' prop
+  const IconComponent = iconMap[name];
+
+  // If the icon name doesn't match any imported SVG, log a warning and return null
+  // or a fallback icon.
+  if (!IconComponent) {
+    console.warn(`DynamicIcon: Icon component for name '${name}' not found.`);
+    // You could return a default fallback icon here, e.g.,
+    // return <Account {...props} color="gray" />;
+    return null;
+  }
+
+  // Render the found SVG component, passing all received props to it.
+  // This includes width, height, color, strokeWidth, and any NativeWind className props.
+  return <IconComponent {...props} />;
+};
+
+export default DynamicIcon;

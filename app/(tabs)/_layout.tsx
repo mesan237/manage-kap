@@ -1,7 +1,7 @@
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { Tabs } from 'expo-router';
-import { Icons } from '@/constants/icons';
+import DynamicIcon from '../components/ui/DynamicIcon';
 
 const styles = {
   button: {
@@ -27,16 +27,6 @@ const TabLayout = () => {
       screenOptions={{
         tabBarActiveTintColor: '#3498DB',
         tabBarInactiveTintColor: '#95A5A6',
-        // tabBarStyle: {
-        //   // backgroundColor: '#FFFFFF',
-        //   borderTopWidth: 1,
-        //   elevation: 0,
-        //   shadowOpacity: 0,
-        // },
-        tabBarStyle: {
-          marginTop: 12,
-        },
-
         headerShown: false,
         animation: 'shift',
         tabBarItemStyle: {
@@ -51,7 +41,9 @@ const TabLayout = () => {
         options={{
           title: 'Home',
           headerShown: false,
-          tabBarIcon: ({ color }) => <Icons.Home color={color} />,
+          tabBarIcon: ({ color }) => (
+            <DynamicIcon color={color} width={20} height={20} strokeWidth={2.5} name="Home" />
+          ),
         }}
         name="index"
       />
@@ -59,7 +51,9 @@ const TabLayout = () => {
         options={{
           headerShown: false,
           title: 'Analytics',
-          tabBarIcon: ({ color }) => <Icons.Analytics color={color} />,
+          tabBarIcon: ({ color }) => (
+            <DynamicIcon color={color} width={20} height={20} strokeWidth={2.5} name="Analytics" />
+          ),
         }}
         name="analysis"
       />
@@ -73,7 +67,7 @@ const TabLayout = () => {
               className=" p-2 rounded-md"
               style={{ backgroundColor: focused ? color : '#64748b' }}
             >
-              <Icons.Add color="#fff" width={15} height={15} strokeWidth={3.5} />
+              <DynamicIcon color="#fff" width={17} height={17} strokeWidth={3} name="Add" />
             </View>
           ),
         }}
@@ -83,15 +77,19 @@ const TabLayout = () => {
         options={{
           headerShown: false,
           title: 'Categories',
-          tabBarIcon: ({ color }) => <Icons.Account color={color} />,
+          tabBarIcon: ({ color }) => (
+            <DynamicIcon color={color} width={20} height={20} strokeWidth={2.5} name="Account" />
+          ),
         }}
-        name="account"
+        name="categories"
       />
       <Tabs.Screen
         options={{
           headerShown: false,
           title: 'Budjet',
-          tabBarIcon: ({ color }) => <Icons.Plan color={color} />,
+          tabBarIcon: ({ color }) => (
+            <DynamicIcon color={color} width={20} height={20} strokeWidth={2.5} name="Plan" />
+          ),
         }}
         name="plan"
       />

@@ -28,16 +28,16 @@ const mockSupabase = {
 
 // Predefined color palette for category background
 const colorPalette = [
-  '#FF6B6B', // Red
-  '#4ECDC4', // Teal
-  '#45B7D1', // Light Blue
-  '#F7DC6F', // Yellow
-  '#A2D9CE', // Mint Green
-  '#BB8FCE', // Purple
-  '#F5B041', // Orange
-  '#5DADE2', // Sky Blue
-  '#2ECC71', // Emerald Green
-  '#AF7AC5', // Lavender
+  '#FF6B6B',
+  '#4ECDC4',
+  '#45B7D1',
+  '#F7DC6F',
+  '#A2D9CE',
+  '#BB8FCE',
+  '#F5B041',
+  '#5DADE2',
+  '#2ECC71',
+  '#AF7AC5',
 ];
 
 // Get screen width for responsive sizing
@@ -57,7 +57,7 @@ const Account = () => {
     setIsEmojiPickerOpen(false);
   };
 
-  const handleSaveCategory = async () => {
+  const Categories = async () => {
     if (!categoryName.trim()) {
       Alert.alert('Validation Error', 'Category name cannot be empty.');
       return;

@@ -1,16 +1,23 @@
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFonts } from 'expo-font';
 import { LinearGradient } from 'expo-linear-gradient';
 
-import { Icons } from '@/constants/icons';
 import { HistoryTransaction } from '../components/HistoryTransaction';
 import { createShadow } from '@/helpers/styleHelper';
 import { BodyText, Heading, InfoText, Subheading } from '../components/StyleText';
 
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import CustomSelectDropdown from '../components/CustomSelectDropdown';
+import DynamicIcon from '../components/ui/DynamicIcon';
 
 const Index = () => {
   let [fontsLoaded] = useFonts({
@@ -71,7 +78,14 @@ const Index = () => {
           <BodyText className=" ">Abed </BodyText>
         </View>
         <View className="">
-          <Icons.Notification color="#333333" height={20} width={20} />
+          <DynamicIcon
+            color="#333333"
+            width={15}
+            height={15}
+            strokeWidth={3.5}
+            name="Notification"
+          />
+          ,
         </View>
       </View>
 
@@ -97,7 +111,13 @@ const Index = () => {
               <View className="flex flex-row items-center gap-2 mb-1">
                 <InfoText className="text-green-300 text-md">Income</InfoText>
                 <View className="bg-green-400/25 rounded-full p-1">
-                  <Icons.MoveDown height={8} width={8} color="#86efac" strokeWidth={4} />
+                  <DynamicIcon
+                    color="#86efac"
+                    height={8}
+                    width={8}
+                    strokeWidth={4}
+                    name="MoveDown"
+                  />
                 </View>
               </View>
               <BodyText className="text-white text-sm font-inter-bold tracking-wide">
@@ -108,7 +128,7 @@ const Index = () => {
               <View className="flex flex-row items-center gap-2 mb-1">
                 <InfoText className="text-red-300">Expenses</InfoText>
                 <View className="bg-red-400/25 rounded-full p-1">
-                  <Icons.MoveUp height={8} width={8} color="#fca5a5" strokeWidth={4} />
+                  <DynamicIcon height={8} width={8} color="#fca5a5" strokeWidth={4} name="MoveUp" />
                 </View>
               </View>
               <BodyText className="text-white text-sm font-inter-bold tracking-wide">
@@ -136,7 +156,13 @@ const Index = () => {
               }}
               className=" bg-[#e5e7eb] rounded-l-md flex items-center justify-center p-3.5"
             >
-              <Icons.ChevronLeft width={14} height={14} color="#131313" strokeWidth={3} />
+              <DynamicIcon
+                width={14}
+                height={14}
+                color="#131313"
+                strokeWidth={3}
+                name="ChevronLeft"
+              />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={showDatePicker}
@@ -145,7 +171,7 @@ const Index = () => {
               <BodyText className="tracking-widest">
                 {transactionDate.toLocaleDateString()}
               </BodyText>
-              <Icons.Calendar height={14} width={14} color="#131313" strokeWidth={2} />
+              <DynamicIcon height={14} width={14} color="#131313" strokeWidth={2} name="Calendar" />
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -155,7 +181,13 @@ const Index = () => {
               }}
               className="px-3 py-2 bg-[#E9ECEF] rounded-r-md flex items-center justify-center"
             >
-              <Icons.ChevronRight width={14} height={14} color="#131313" strokeWidth={3} />
+              <DynamicIcon
+                width={14}
+                height={14}
+                color="#131313"
+                strokeWidth={3}
+                name="ChevronRight"
+              />
             </TouchableOpacity>
           </View>
           <DateTimePickerModal
@@ -172,7 +204,9 @@ const Index = () => {
         <View className="mx-5 mt-5 rounded-[2rem]">
           <View className="flex flex-row justify-between items-center">
             <Subheading>Recent Transactions</Subheading>
-            <InfoText>view all</InfoText>
+            <TouchableOpacity onPress={() => {}}>
+              <InfoText>view all</InfoText>
+            </TouchableOpacity>
           </View>
 
           <View className="mt-2">
@@ -180,17 +214,23 @@ const Index = () => {
             <View className="flex flex-row justify-between items-center mb-3">
               <BodyText className="text-gray-500 text-xs font-inter-bold">2, Jan 2025</BodyText>
             </View>
-            <HistoryTransaction title="Salary" entry={600000} type="income" category="salary" />
+            <HistoryTransaction title="Salary" entry={600000} type="income" category="salary">
+              <DynamicIcon height={18} width={18} color="#fff" strokeWidth={2.5} name="Account" />
+            </HistoryTransaction>
             <HistoryTransaction
               title="ingredients for cooking"
               entry={50000}
               type="expense"
               category="Groceries"
-            />
+            >
+              <DynamicIcon height={18} width={18} color="#fff" strokeWidth={2.5} name="Profile" />
+            </HistoryTransaction>
             <View className="flex flex-row justify-between items-center mb-3">
               <BodyText className="text-gray-500 text-xs">2, Jan 2025</BodyText>
             </View>
-            <HistoryTransaction title="Utilities" entry={20000} type="expense" category="Tools" />
+            <HistoryTransaction title="Utilities" entry={20000} type="expense" category="Tools">
+              <DynamicIcon height={18} width={18} color="#fff" strokeWidth={2.5} name="Calendar" />
+            </HistoryTransaction>
           </View>
         </View>
       </ScrollView>

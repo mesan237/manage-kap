@@ -1,7 +1,6 @@
 import { View, Text } from 'react-native';
-import React from 'react';
+import React, { Children, ReactNode } from 'react';
 import { BodyText, InfoText } from './StyleText';
-import { Icons } from '@/constants/icons';
 
 interface HistoryTransactionProps {
   title: string;
@@ -20,15 +19,22 @@ const generateRandomColor = () => {
   return color;
 };
 
-export const HistoryTransaction = ({ title, entry, type, category }: HistoryTransactionProps) => {
+export const HistoryTransaction = ({
+  children,
+  title,
+  entry,
+  type,
+  category,
+}: { children: ReactNode } & HistoryTransactionProps) => {
+  const color = generateRandomColor();
   return (
     <View className="flex flex-row justify-between items-start mb-3 border-b border-gray-200 pb-0.5">
       <View className="flex flex-row gap-2 items-center">
         <View
-          style={{ backgroundColor: generateRandomColor() }}
-          className="rounded-2xl shadow-xl w-12 h-12 flex items-center justify-center mb-1 "
+          style={{ backgroundColor: '#131313' }}
+          className="rounded-full shadow-xl w-12 h-12 flex items-center justify-center mb-1 "
         >
-          <Icons.Account height={18} width={18} color="#fff" strokeWidth={2.5} className="" />
+          {children}
         </View>
         <View className="flex justify-between gap-0.5">
           <BodyText className=" first-letter:uppercase">{title} </BodyText>
