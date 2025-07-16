@@ -44,7 +44,7 @@ const colorPalette = [
 const { width } = Dimensions.get('window');
 const colorItemSize = (width - 64) / 5; // 5 columns, with 16px padding on each side (32 total), and 8px margin between items (4 * 8 = 32)
 
-const Account = () => {
+const Categories = () => {
   const [categoryName, setCategoryName] = useState('');
   const [categoryType, setCategoryType] = useState<'Expense' | 'Income'>('Expense');
   const [selectedEmoji, setSelectedEmoji] = useState<EmojiType | null>(null);
@@ -57,7 +57,7 @@ const Account = () => {
     setIsEmojiPickerOpen(false);
   };
 
-  const Categories = async () => {
+  const handleSaveCategory = async () => {
     if (!categoryName.trim()) {
       Alert.alert('Validation Error', 'Category name cannot be empty.');
       return;
@@ -104,7 +104,7 @@ const Account = () => {
     }
   };
   return (
-    <SafeAreaView className="flex-1 bg-gray-50">
+    <SafeAreaView className="flex-1 bg-gray-50" edges={['left', 'right', 'top']}>
       <ScrollView contentContainerStyle={{ padding: 20, paddingBottom: 40 }}>
         <Text className="text-3xl font-bold text-gray-800 mb-8 text-center">Add New Category</Text>
 
@@ -188,7 +188,7 @@ const Account = () => {
             ))}
           </View>
           <View className="rounded-full w-10 p-2" style={{ backgroundColor: selectedColor ?? '' }}>
-            <Text className="text-center  w-fit ">{selectedEmoji?.emoji ?? ''}</Text>
+            <Text className="text-center  w-fit">{selectedEmoji?.emoji ?? ''}</Text>
           </View>
         </View>
 
@@ -227,4 +227,4 @@ const Account = () => {
   );
 };
 
-export default Account;
+export default Categories;

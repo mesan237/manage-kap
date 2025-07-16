@@ -1,25 +1,8 @@
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { View } from 'react-native';
 import React from 'react';
 import { Tabs } from 'expo-router';
-import DynamicIcon from '../components/ui/DynamicIcon';
 
-const styles = {
-  button: {
-    position: 'absolute',
-    top: -10,
-    left: '50%',
-    transform: [{ translateX: -20 }],
-    backgroundColor: '#3498DB',
-    borderRadius: 50,
-    width: 40,
-    height: 40,
-    borderWidth: 2,
-    borderColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    // boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.2)',
-  },
-};
+import DynamicIcon from '../components/ui/DynamicIcon';
 
 const TabLayout = () => {
   return (
