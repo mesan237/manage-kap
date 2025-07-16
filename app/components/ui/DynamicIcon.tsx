@@ -74,13 +74,13 @@ interface DynamicIconProps extends SvgProps {
   color?: string;
   height: number;
   width: number;
-  strokeWidth: number;
+  strokeWidth?: number;
 }
 
 const DynamicIcon: React.FC<DynamicIconProps> = ({ name, ...props }) => {
   // Retrieve the specific SVG component from the map based on the 'name' prop
   const IconComponent = iconMap[name];
-
+  props.strokeWidth = 2.5;
   // If the icon name doesn't match any imported SVG, log a warning and return null
   // or a fallback icon.
   if (!IconComponent) {

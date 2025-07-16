@@ -1,30 +1,22 @@
-import { View, Text, TouchableOpacity, ScrollView, Dimensions, TextInput } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Dimensions,
+  TextInput,
+  Button,
+  FlatList,
+  StyleSheet,
+} from 'react-native';
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import EmojiPicker, { EmojiType } from 'rn-emoji-keyboard';
 import { Alert } from 'react-native';
 
-import { v4 as uuidv4 } from 'uuid'; // For generating UUIDs for mock data
-
-// Mock Supabase client for demonstration purposes
-// In a real app, you would import and initialize your actual Supabase client
-const mockSupabase = {
-  from: (tableName) => ({
-    insert: async (data) => {
-      console.log(`Mock Supabase: Inserting into ${tableName}`, data);
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          if (Math.random() > 0.1) {
-            // Simulate success 90% of the time
-            resolve({ data: { id: uuidv4(), ...data }, error: null });
-          } else {
-            resolve({ data: null, error: { message: 'Mock DB insert failed' } });
-          }
-        }, 1000); // Simulate network delay
-      });
-    },
-  }),
-};
+import Modal from 'react-native-modal';
+import DynamicIcon from '../components/ui/DynamicIcon';
+import { powersync } from '@/powersync/system';
 
 // Predefined color palette for category background
 const colorPalette = [
@@ -40,11 +32,34 @@ const colorPalette = [
   '#AF7AC5',
 ];
 
+const icons = [
+  'Home',
+  'Account',
+  'Profile',
+  'Analytics',
+  'Plan',
+  'Add',
+  'MoveDown',
+  'MoveUp',
+  'Notification',
+  'Calendar',
+  'ChevronRight',
+  'ChevronLeft',
+  'Entertainment',
+];
+
 // Get screen width for responsive sizing
 const { width } = Dimensions.get('window');
 const colorItemSize = (width - 64) / 5; // 5 columns, with 16px padding on each side (32 total), and 8px margin between items (4 * 8 = 32)
 
 const Categories = () => {
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [categoryIconName, setCategoryIconName] = useState(icons[12]);
+
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
+
   const [categoryName, setCategoryName] = useState('');
   const [categoryType, setCategoryType] = useState<'Expense' | 'Income'>('Expense');
   const [selectedEmoji, setSelectedEmoji] = useState<EmojiType | null>(null);
@@ -71,6 +86,16 @@ const Categories = () => {
       return;
     }
 
+    try {
+      await powersync.execute(
+        'INSERT INTO categories (id, created_at, name, icon, type, bg_color) VALUES (uuid(), datetime(), ?, ?, ?, ?) RETURNING *',
+        [categoryName, categoryIconName, categoryType, selectedColor]
+      );
+      // Watched queries should automatically reload after mutation
+    } catch (ex) {
+      // Alert.alert('Error', ex.message);
+    }
+
     setIsLoading(true);
     try {
       // In a real app, you'd get the user_id from Supabase auth
@@ -83,19 +108,6 @@ const Categories = () => {
         icon: selectedEmoji.emoji, // Store the emoji character
         bg_color: selectedColor,
       };
-
-      const { data, error } = await mockSupabase.from('categories').insert(newCategory);
-
-      if (error) {
-        Alert.alert('Error', `Failed to add category: ${error.message}`);
-      } else {
-        Alert.alert('Success', `${categoryName} category added successfully!`);
-        // Reset form or navigate back
-        setCategoryName('');
-        setCategoryType('Expense');
-        setSelectedEmoji(null);
-        setSelectedColor(null);
-      }
     } catch (err) {
       console.error('Save error:', err);
       Alert.alert('Error', 'An unexpected error occurred while saving.');
@@ -160,12 +172,13 @@ const Categories = () => {
           <Text className="text-base font-semibold text-gray-600 mb-2">Choose Icon</Text>
           <TouchableOpacity
             className="bg-white border border-gray-300 rounded-lg p-4 items-center justify-center min-h-[60px] shadow-sm"
-            onPress={() => setIsEmojiPickerOpen(true)}
+            onPress={toggleModal}
           >
             {selectedEmoji ? (
-              <Text className="text-4xl">{selectedEmoji.emoji}</Text>
+              // <Text className="text-4xl">{selectedEmoji.emoji}</Text>
+              <DynamicIcon color="#fff" height={15} width={15} name={categoryIconName} />
             ) : (
-              <Text className="text-base text-gray-500">Tap to choose emoji</Text>
+              <Text className="text-base text-gray-500">Tap to choose the icon</Text>
             )}
           </TouchableOpacity>
         </View>
@@ -207,6 +220,46 @@ const Categories = () => {
       </ScrollView>
 
       {/* Emoji Picker Modal */}
+      <Modal
+        isVisible={isModalVisible}
+        propagateSwipe={true}
+        deviceHeight={200}
+        style={styles.bottomModal}
+        onSwipeComplete={() => setModalVisible(false)}
+        swipeDirection="down"
+        coverScreen={false}
+        // swipeThreshold={15}
+        backdropOpacity={0.9}
+        onBackdropPress={() => setModalVisible(false)}
+      >
+        <View className="bg-white flex-1 " style={{ height: 200 }}>
+          <View style={styles.modalContent}>
+            <View style={styles.swipeBar} />
+            <Button title="Close" onPress={() => setModalVisible(false)} />
+          </View>
+
+          <View className="flex flex-row gap-2 flex-wrap justify-center">
+            {icons.map((icon, index) => (
+              <TouchableOpacity
+                key={index}
+                style={{
+                  backgroundColor: '#1313ab',
+                  width: colorItemSize,
+                  height: colorItemSize,
+                }}
+                className={`rounded-lg my-2 border-2 border-transparent items-center justify-center shadow-sm`}
+                onPress={() => {
+                  setCategoryIconName(icon);
+                  setModalVisible(false);
+                }}
+              >
+                <DynamicIcon color="#fcc" height={15} width={15} name={icon} />
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+      </Modal>
+
       <EmojiPicker
         onEmojiSelected={handleEmojiSelect}
         open={isEmojiPickerOpen}
@@ -226,5 +279,28 @@ const Categories = () => {
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  bottomModal: {
+    justifyContent: 'flex-end',
+    margin: 0,
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 16,
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
+    minHeight: '40%', // adjust as needed
+  },
+  swipeBar: {
+    width: 40,
+    height: 5,
+    borderRadius: 3,
+    backgroundColor: '#ccc',
+    alignSelf: 'center',
+    marginBottom: 8,
+  },
+});
 
 export default Categories;

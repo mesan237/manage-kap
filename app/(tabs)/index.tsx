@@ -82,10 +82,9 @@ const Index = () => {
             color="#333333"
             width={15}
             height={15}
-            strokeWidth={3.5}
+            strokeWidth={2.5}
             name="Notification"
           />
-          ,
         </View>
       </View>
 
