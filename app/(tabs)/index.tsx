@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFonts } from 'expo-font';
+import { LinearGradient } from 'expo-linear-gradient';
 
 import { Icons } from '@/constants/icons';
-import { HistoryTransaction, TransactionItem } from '../components/HistoryTransaction';
+import { HistoryTransaction } from '../components/HistoryTransaction';
 import { createShadow } from '@/helpers/styleHelper';
 import { BodyText, Heading, InfoText, Subheading } from '../components/StyleText';
 
@@ -57,6 +58,13 @@ const Index = () => {
 
   return (
     <SafeAreaView className="bg-[#f9f9f9]" edges={['top', 'left', 'right']}>
+      {/* <LinearGradient
+        style={StyleSheet.absoluteFill}
+        colors={['cyan', 'lightgreen']}
+        start={{ x: 1, y: 0.25 }} 
+        end={{ x: 0, y: 1 }} 
+      /> */}
+
       <View className="flex flex-row justify-between items-center m-5 mb-0 rounded-md">
         <View className="flex justify-center gap-0.5">
           <InfoText className="  capitalize">Welcome Back, </InfoText>
@@ -66,8 +74,6 @@ const Index = () => {
           <Icons.Notification color="#333333" height={20} width={20} />
         </View>
       </View>
-
-      {/* <View className='"mx-5 mt-10 bg-primary p-5 rounded-[1.5rem] shadow-2xl shadow-blue-900 h-48 absolute' /> */}
 
       <View
         style={[
@@ -164,7 +170,10 @@ const Index = () => {
 
       <ScrollView>
         <View className="mx-5 mt-5 rounded-[2rem]">
-          <Subheading>Recent Transactions</Subheading>
+          <View className="flex flex-row justify-between items-center">
+            <Subheading>Recent Transactions</Subheading>
+            <InfoText>view all</InfoText>
+          </View>
 
           <View className="mt-2">
             {/* date */}

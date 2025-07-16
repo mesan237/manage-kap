@@ -58,41 +58,31 @@ const TabLayout = () => {
       <Tabs.Screen
         options={{
           headerShown: false,
-          title: 'Analysis',
+          title: 'Analytics',
           tabBarIcon: ({ color }) => <Icons.Analytics color={color} />,
         }}
         name="analysis"
       />
 
       <Tabs.Screen
-        name="custom"
+        name="addtransaction"
         options={{
-          title: 'Custom',
-          tabBarLabel: 'Custom',
-          tabBarButton: ({}) => (
-            <TouchableOpacity
-              style={styles.button}
-              activeOpacity={0.85}
-              onPress={() => {
-                console.log('Custom tab pressed');
-              }}
+          title: 'Record',
+          tabBarIcon: ({ color, focused }) => (
+            <View
+              className=" p-2 rounded-md"
+              style={{ backgroundColor: focused ? color : '#64748b' }}
             >
               <Icons.Add color="#fff" width={15} height={15} strokeWidth={3.5} />
-            </TouchableOpacity>
+            </View>
           ),
-        }}
-        listeners={{
-          tabPress: (e) => {
-            e.preventDefault();
-            console.log('tabPress');
-          },
         }}
       />
 
       <Tabs.Screen
         options={{
           headerShown: false,
-          title: 'Account',
+          title: 'Categories',
           tabBarIcon: ({ color }) => <Icons.Account color={color} />,
         }}
         name="account"
@@ -100,7 +90,7 @@ const TabLayout = () => {
       <Tabs.Screen
         options={{
           headerShown: false,
-          title: 'Plan',
+          title: 'Budjet',
           tabBarIcon: ({ color }) => <Icons.Plan color={color} />,
         }}
         name="plan"
