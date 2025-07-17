@@ -96,7 +96,7 @@ const Index = () => {
             // ...createShadow(2),
             // backgroundColor: '#1e293b',
           },
-          ,
+          
         ]}
         className="mx-5 mt-5 overflow-hidden bg-blue-400"
       >
