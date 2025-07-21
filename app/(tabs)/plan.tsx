@@ -9,12 +9,12 @@ import {
 } from 'react-native';
 import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Calculator from '../components/Calculator';
-import CustomSelectDropdown from '../components/CustomSelectDropdown';
+import Calculator from '@/components/Calculator';
+import CustomSelectDropdown from '@/components/CustomSelectDropdown';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import { BodyText, InfoText } from '../components/StyleText';
+import { BodyText, InfoText } from '@/components/StyleText';
 import { styles } from '@/helpers/styleHelper';
-import DynamicIcon from '../components/ui/DynamicIcon';
+import DynamicIcon from '@/components/ui/DynamicIcon';
 
 export default function Budget() {
   const showDatePicker = () => {

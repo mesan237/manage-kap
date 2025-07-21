@@ -9,16 +9,15 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFonts } from 'expo-font';
-import { LinearGradient } from 'expo-linear-gradient';
 
-import { HistoryTransaction } from '../components/HistoryTransaction';
 import { createShadow } from '@/helpers/styleHelper';
-import { BodyText, Heading, InfoText, Subheading } from '../components/StyleText';
+import { BodyText, Heading, InfoText, Subheading } from '@/components/StyleText';
 
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import CustomSelectDropdown from '../components/CustomSelectDropdown';
-import DynamicIcon from '../components/ui/DynamicIcon';
+import CustomSelectDropdown from '@/components/CustomSelectDropdown';
+import DynamicIcon from '@/components/ui/DynamicIcon';
 import { router } from 'expo-router';
+import HistoryTransaction from '@/components/HistoryTransaction';
 
 const Index = () => {
   let [fontsLoaded] = useFonts({

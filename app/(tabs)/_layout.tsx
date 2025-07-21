@@ -1,8 +1,7 @@
 import { View } from 'react-native';
 import React from 'react';
 import { Tabs } from 'expo-router';
-
-import DynamicIcon from '../components/ui/DynamicIcon';
+import DynamicIcon from '@/components/ui/DynamicIcon';
 
 const TabLayout = () => {
   return (

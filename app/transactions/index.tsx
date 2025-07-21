@@ -3,10 +3,10 @@ import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import CustomSelectDropdown from '../components/CustomSelectDropdown';
-import DynamicIcon from '../components/ui/DynamicIcon';
-import { BodyText, Subheading } from '../components/StyleText';
-import HistoryTransaction from '../components/HistoryTransaction';
+import CustomSelectDropdown from '@/components/CustomSelectDropdown';
+import DynamicIcon from '@/components/ui/DynamicIcon';
+import { BodyText, Subheading } from '@/components/StyleText';
+import HistoryTransaction from '@/components/HistoryTransaction';
 
 const Transactions = () => {
   // date picker state

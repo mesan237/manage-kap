@@ -15,7 +15,7 @@ import EmojiPicker, { EmojiType } from 'rn-emoji-keyboard';
 import { Alert } from 'react-native';
 
 import Modal from 'react-native-modal';
-import DynamicIcon from '../components/ui/DynamicIcon';
+import DynamicIcon from '@/components/ui/DynamicIcon';
 import { powersync } from '@/powersync/system';
 
 // Predefined color palette for category background
