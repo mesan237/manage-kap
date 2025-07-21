@@ -7,7 +7,7 @@ type HeadingProps = {
 } & TextProps;
 
 export const Heading = ({ children, style = {}, className = '', ...props }: HeadingProps) => (
-  <Text style={style} className={`text-lg  text-white font-inter-bold ${className}`} {...props}>
+  <Text style={style} className={`text-lg text-white font-inter-bold ${className}`} {...props}>
     {children}
   </Text>
 );

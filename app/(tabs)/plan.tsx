@@ -16,7 +16,7 @@ import { BodyText, InfoText } from '../components/StyleText';
 import { styles } from '@/helpers/styleHelper';
 import DynamicIcon from '../components/ui/DynamicIcon';
 
-export default function Planning() {
+export default function Budget() {
   const showDatePicker = () => {
     setDatePickerVisibility(true);
   };

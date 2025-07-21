@@ -18,6 +18,7 @@ import { BodyText, Heading, InfoText, Subheading } from '../components/StyleText
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import CustomSelectDropdown from '../components/CustomSelectDropdown';
 import DynamicIcon from '../components/ui/DynamicIcon';
+import { router } from 'expo-router';
 
 const Index = () => {
   let [fontsLoaded] = useFonts({
@@ -26,38 +27,6 @@ const Index = () => {
     'Inter-Var-Medium': require('../../assets/fonts/InterVar-Medium.ttf'),
     'Inter-Var-SemiBold': require('../../assets/fonts/InterVar-SemiBold.ttf'),
   });
-
-  // date picker state
-  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  const [transactionDate, setTransactionDate] = useState(new Date());
-
-  const showDatePicker = () => {
-    setDatePickerVisibility(true);
-  };
-
-  const hideDatePicker = () => {
-    setDatePickerVisibility(false);
-  };
-
-  const handleConfirm = (date: Date) => {
-    setTransactionDate(date);
-    console.warn('A date has been picked: ', date);
-    hideDatePicker();
-  };
-
-  const handleDateChangeOn = (currentDateParam: Date) => {
-    const newDate = new Date(currentDateParam);
-    // Mutate the NEW Date object
-    newDate.setMonth(newDate.getMonth() + 1);
-    setTransactionDate(newDate);
-  };
-
-  const handleDateChangeOff = (currentDateParam: Date) => {
-    const newDate = new Date(currentDateParam);
-
-    newDate.setMonth(newDate.getMonth() - 1);
-    setTransactionDate(newDate);
-  };
 
   if (!fontsLoaded) {
     return null;
@@ -96,7 +65,6 @@ const Index = () => {
             // ...createShadow(2),
             // backgroundColor: '#1e293b',
           },
-          
         ]}
         className="mx-5 mt-5 overflow-hidden bg-blue-400"
       >
@@ -138,72 +106,15 @@ const Index = () => {
         </View>
       </View>
 
-      <View className="flex flex-row justify-between items-center mx-5 mt-5 gap-0.5">
-        <CustomSelectDropdown
-          datas={['Daily', 'Weekly', 'Monthly']}
-          defaultValue="Monthly"
-          onSelect={(selectedItem, index) => {
-            console.log(selectedItem, index);
-          }}
-        />
-
-        <View>
-          <View className="flex flex-row gap-0">
-            <TouchableOpacity
-              onPress={() => {
-                handleDateChangeOff(transactionDate);
-              }}
-              className=" bg-[#e5e7eb] rounded-l-md flex items-center justify-center p-3.5"
-            >
-              <DynamicIcon
-                width={14}
-                height={14}
-                color="#131313"
-                strokeWidth={3}
-                name="ChevronLeft"
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={showDatePicker}
-              className="flex flex-row items-center gap-2 justify-between w-40 border-r border-l border-[#D2D9DF] px-3 py-2 bg-[#E9ECEF]"
-            >
-              <BodyText className="tracking-widest">
-                {transactionDate.toLocaleDateString()}
-              </BodyText>
-              <DynamicIcon height={14} width={14} color="#131313" strokeWidth={2} name="Calendar" />
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => {
-                const newDate = new Date(transactionDate);
-                handleDateChangeOn(newDate);
-              }}
-              className="px-3 py-2 bg-[#E9ECEF] rounded-r-md flex items-center justify-center"
-            >
-              <DynamicIcon
-                width={14}
-                height={14}
-                color="#131313"
-                strokeWidth={3}
-                name="ChevronRight"
-              />
-            </TouchableOpacity>
-          </View>
-          <DateTimePickerModal
-            isVisible={isDatePickerVisible}
-            mode="date"
-            date={transactionDate}
-            onConfirm={handleConfirm}
-            onCancel={hideDatePicker}
-          />
-        </View>
-      </View>
-
       <ScrollView>
         <View className="mx-5 mt-5 rounded-[2rem]">
           <View className="flex flex-row justify-between items-center">
             <Subheading>Recent Transactions</Subheading>
-            <TouchableOpacity onPress={() => {}}>
+            <TouchableOpacity
+              onPress={() => {
+                router.push('/transactions');
+              }}
+            >
               <InfoText>view all</InfoText>
             </TouchableOpacity>
           </View>

@@ -28,7 +28,7 @@ export const HistoryTransaction = ({
 }: { children: ReactNode } & HistoryTransactionProps) => {
   const color = generateRandomColor();
   return (
-    <View className="flex flex-row justify-between items-start mb-3 border-b border-gray-200 pb-0.5">
+    <View className="flex flex-row justify-between items-start mb-3 pb-0.5">
       <View className="flex flex-row gap-2 items-center">
         <View
           style={{ backgroundColor: '#131313' }}
