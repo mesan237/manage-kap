@@ -77,3 +77,4 @@ export const AppSchema = new Schema({
 });
 
 export type Database = (typeof AppSchema)['types'];
+export type CategoryRecord = Database['categories'];

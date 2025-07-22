@@ -1,3 +1,5 @@
+import '@azure/core-asynciterator-polyfill';
+
 import {
   View,
   Text,
@@ -9,14 +11,18 @@ import {
   FlatList,
   StyleSheet,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import EmojiPicker, { EmojiType } from 'rn-emoji-keyboard';
 import { Alert } from 'react-native';
 
 import Modal from 'react-native-modal';
 import DynamicIcon from '@/components/ui/DynamicIcon';
-import { powersync } from '@/powersync/system';
+
+import { Picker } from '@react-native-picker/picker';
+import { useSystem } from '@/powersync/system';
+
+import { CategoryRecord } from '@/powersync/AppSchema';
 
 // Predefined color palette for category background
 const colorPalette = [
@@ -48,11 +54,26 @@ const icons = [
   'Entertainment',
 ];
 
+interface Category {
+  name: string;
+  icon: string;
+  type: string;
+  bg_color: string;
+}
+
+const { height: deviceHeight } = Dimensions.get('window');
+
 // Get screen width for responsive sizing
 const { width } = Dimensions.get('window');
 const colorItemSize = (width - 64) / 5; // 5 columns, with 16px padding on each side (32 total), and 8px margin between items (4 * 8 = 32)
 
 const Categories = () => {
+  const system = useSystem();
+
+  useEffect(() => {
+    system.init();
+  }, []);
+
   const [isModalVisible, setModalVisible] = useState(false);
   const [categoryIconName, setCategoryIconName] = useState(icons[12]);
 
@@ -67,6 +88,9 @@ const Categories = () => {
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  const [selectedLanguage, setSelectedLanguage] = useState();
+
+  const { supabaseConnector, db } = useSystem();
   const handleEmojiSelect = (emoji: EmojiType) => {
     setSelectedEmoji(emoji);
     setIsEmojiPickerOpen(false);
@@ -77,20 +101,20 @@ const Categories = () => {
       Alert.alert('Validation Error', 'Category name cannot be empty.');
       return;
     }
-    if (!selectedEmoji) {
-      Alert.alert('Validation Error', 'Please choose an emoji for the category.');
-      return;
-    }
+    // if (!selectedEmoji) {
+    //   Alert.alert('Validation Error', 'Please choose an emoji for the category.');
+    //   return;
+    // }
     if (!selectedColor) {
       Alert.alert('Validation Error', 'Please choose a background color for the category.');
       return;
     }
 
     try {
-      await powersync.execute(
-        'INSERT INTO categories (id, created_at, name, icon, type, bg_color) VALUES (uuid(), datetime(), ?, ?, ?, ?) RETURNING *',
-        [categoryName, categoryIconName, categoryType, selectedColor]
-      );
+      // await db.execute(
+      //   'INSERT INTO categories (id, created_at, name, icon, type, bg_color) VALUES (uuid(), datetime(), ?, ?, ?, ?) RETURNING *',
+      //   [categoryName, categoryIconName, categoryType, selectedColor]
+      // );
       // Watched queries should automatically reload after mutation
     } catch (ex) {
       // Alert.alert('Error', ex.message);
@@ -102,12 +126,15 @@ const Categories = () => {
       const userId = 'mock-user-uuid-123'; // Replace with actual user ID
 
       const newCategory = {
-        user_id: userId,
+        id: userId,
         name: categoryName.trim(),
         type: categoryType,
-        icon: selectedEmoji.emoji, // Store the emoji character
+        icon: categoryIconName,
+        // icon: selectedEmoji.emoji, // Store the emoji character
         bg_color: selectedColor,
       };
+
+      await db.insertInto('categories').values(newCategory).execute();
     } catch (err) {
       console.error('Save error:', err);
       Alert.alert('Error', 'An unexpected error occurred while saving.');
@@ -176,7 +203,7 @@ const Categories = () => {
           >
             {selectedEmoji ? (
               // <Text className="text-4xl">{selectedEmoji.emoji}</Text>
-              <DynamicIcon color="#fff" height={15} width={15} name={categoryIconName} />
+              <DynamicIcon color="#adc" height={15} width={15} name={categoryIconName} />
             ) : (
               <Text className="text-base text-gray-500">Tap to choose the icon</Text>
             )}
@@ -220,19 +247,21 @@ const Categories = () => {
       </ScrollView>
 
       {/* Emoji Picker Modal */}
+
       <Modal
         isVisible={isModalVisible}
-        propagateSwipe={true}
-        deviceHeight={200}
-        style={styles.bottomModal}
+        propagateSwipe
+        useNativeDriverForBackdrop={true}
+        hideModalContentWhileAnimating={true}
+        style={[styles.modal]}
         onSwipeComplete={() => setModalVisible(false)}
         swipeDirection="down"
         coverScreen={false}
         // swipeThreshold={15}
-        backdropOpacity={0.9}
+        backdropOpacity={0.3}
         onBackdropPress={() => setModalVisible(false)}
       >
-        <View className="bg-white flex-1 " style={{ height: 200 }}>
+        <View style={{ backgroundColor: '#E9ECEF', padding: 12 }}>
           <View style={styles.modalContent}>
             <View style={styles.swipeBar} />
             <Button title="Close" onPress={() => setModalVisible(false)} />
@@ -247,13 +276,13 @@ const Categories = () => {
                   width: colorItemSize,
                   height: colorItemSize,
                 }}
-                className={`rounded-lg my-2 border-2 border-transparent items-center justify-center shadow-sm`}
+                className={`rounded-full my-1 border border-transparent items-center justify-center shadow-sm`}
                 onPress={() => {
                   setCategoryIconName(icon);
                   setModalVisible(false);
                 }}
               >
-                <DynamicIcon color="#fcc" height={15} width={15} name={icon} />
+                <DynamicIcon color="#fcc" height={24} width={24} name={icon} />
               </TouchableOpacity>
             ))}
           </View>
@@ -276,6 +305,16 @@ const Categories = () => {
         //   // ... more theme options
         // }}
       />
+
+      {/* picker */}
+      <Picker
+        selectedValue={selectedLanguage}
+        onValueChange={(itemValue, itemIndex) => setSelectedLanguage(itemValue)}
+        mode="dropdown"
+      >
+        <Picker.Item label="Java" value="java" />
+        <Picker.Item label="JavaScript" value="js" />
+      </Picker>
     </SafeAreaView>
   );
 };
@@ -287,11 +326,21 @@ const styles = StyleSheet.create({
     margin: 0,
   },
   modalContent: {
+    // position: 'absolute',
     backgroundColor: 'white',
-    padding: 16,
+    padding: 36,
     borderTopLeftRadius: 12,
     borderTopRightRadius: 12,
-    minHeight: '40%', // adjust as needed
+    borderRadius: 10,
+    flex: 1,
+    height: '100%',
+    width: '100%',
+  },
+  modal: {
+    justifyContent: 'flex-end',
+    margin: 0,
+
+    height: deviceHeight * 0.7, // 70% of screen height
   },
   swipeBar: {
     width: 40,
@@ -299,7 +348,7 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     backgroundColor: '#ccc',
     alignSelf: 'center',
-    marginBottom: 8,
+    // marginBottom: 18,
   },
 });
 

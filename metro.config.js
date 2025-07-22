@@ -21,6 +21,8 @@ const config = {
         inlineRequires: {
           blockList: {
             [require.resolve('@powersync/react-native')]: true,
+            [require.resolve('@powersync/react')]: true,
+            [require.resolve('@powersync/common')]: true,
           },
         },
       },
