@@ -1,3 +1,4 @@
+import '@azure/core-asynciterator-polyfill';
 import { StatusBar } from 'react-native';
 import { Slot } from 'expo-router';
 import './globals.css';

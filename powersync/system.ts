@@ -1,18 +1,20 @@
-import { PowerSyncDatabase } from '@powersync/react-native';
-import { OPSqliteOpenFactory } from '@powersync/op-sqlite'; // Add this import
-import { AppSchema } from './AppSchema';
-import { Connector } from './Connector';
+import '@azure/core-asynciterator-polyfill';
 
-// Create the factory
-const opSqlite = new OPSqliteOpenFactory({
-  dbFilename: 'powersync.db',
-});
+import { PowerSyncDatabase } from '@powersync/react-native';
+import { Connector } from './Connector';
+import { AppSchema } from './AppSchema';
 
 export const powersync = new PowerSyncDatabase({
-  // For other options see,
+  // The schema you defined in the previous step
   schema: AppSchema,
-  // Override the default database
-  database: opSqlite,
+  // For other options see,
+  // https://powersync-ja.github.io/powersync-js/web-sdk/globals#powersyncopenfactoryoptions
+  database: {
+    // Filename for the SQLite database — it's important to only instantiate one instance per file.
+    // For other database options see,
+    // https://powersync-ja.github.io/powersync-js/web-sdk/globals#sqlopenoptions
+    dbFilename: 'powersync.db',
+  },
 });
 
 export const setupPowerSync = async () => {

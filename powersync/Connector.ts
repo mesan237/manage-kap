@@ -1,4 +1,8 @@
-import { PowerSyncBackendConnector, UpdateType } from '@powersync/react-native';
+import {
+  PowerSyncBackendConnector,
+  AbstractPowerSyncDatabase,
+  UpdateType,
+} from '@powersync/react-native';
 
 export class Connector implements PowerSyncBackendConnector {
   /**
