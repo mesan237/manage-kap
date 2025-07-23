@@ -28,7 +28,7 @@ yarn-error.*
 
 .npmrc
 .env
-
+/android
 # macOS
 .DS_Store
 *.pem
