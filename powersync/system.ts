@@ -1,33 +1,37 @@
-import 'react-native';
+import '@azure/core-asynciterator-polyfill';
 
-if (__DEV__) {
-  require('react-native').unstable_enableLogBox();
+import {
+  AbstractPowerSyncDatabase,
+  PowerSyncDatabase as PowerSyncDatabaseNative,
+} from '@powersync/react-native';
+import { Kysely, wrapPowerSyncWithKysely } from '@powersync/kysely-driver';
+
+import { SupabaseConnector } from '../supabase/SupabaseConnector';
+import { AppSchema, Database } from './AppSchema';
+import React from 'react';
+export class System {
+  supabaseConnector: SupabaseConnector;
+  powersync: AbstractPowerSyncDatabase;
+  db: Kysely<Database>;
+
+  constructor() {
+    this.supabaseConnector = new SupabaseConnector(this);
+
+    this.powersync = new PowerSyncDatabaseNative({
+      schema: AppSchema,
+      database: {
+        dbFilename: 'sqlite.db',
+      },
+    });
+    this.db = wrapPowerSyncWithKysely<Database>(this.powersync);
+  }
+
+  async init() {
+    await this.powersync.init();
+    await this.powersync.connect(this.supabaseConnector);
+  }
 }
 
-import { PowerSyncDatabase } from '@powersync/react-native';
-if (!PowerSyncDatabase) {
-  console.error('PowerSyncDatabase native module is not loaded');
-} else {
-  console.log('PowerSyncDatabase is ready');
-}
-import { OPSqliteOpenFactory } from '@powersync/op-sqlite'; // Add this import
-import { AppSchema } from './AppSchema';
-import { Connector } from './Connector';
-
-// Create the factory
-const opSqlite = new OPSqliteOpenFactory({
-  dbFilename: 'powersync.db',
-});
-
-export const powersync = new PowerSyncDatabase({
-  // For other options see,
-  schema: AppSchema,
-  // Override the default database
-  database: opSqlite,
-});
-
-export const setupPowerSync = async () => {
-  // Uses the backend connector that will be created in the next section
-  const connector = new Connector();
-  powersync.connect(connector);
-};
+export const system = new System();
+export const SystemContext = React.createContext(system);
+export const useSystem = () => React.useContext(SystemContext);

@@ -16,6 +16,17 @@ const { assetExts, sourceExts } = defaultConfig.resolver;
 const config = {
   transformer: {
     babelTransformerPath: require.resolve('react-native-svg-transformer/expo'),
+    getTransformOptions: async () => ({
+      transform: {
+        inlineRequires: {
+          blockList: {
+            [require.resolve('@powersync/react-native')]: true,
+            [require.resolve('@powersync/react')]: true,
+            [require.resolve('@powersync/common')]: true,
+          },
+        },
+      },
+    }),
   },
   resolver: {
     assetExts: assetExts.filter((ext) => ext !== 'svg'),
