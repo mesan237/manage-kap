@@ -1,4 +1,15 @@
+import 'react-native';
+
+if (__DEV__) {
+  require('react-native').unstable_enableLogBox();
+}
+
 import { PowerSyncDatabase } from '@powersync/react-native';
+if (!PowerSyncDatabase) {
+  console.error('PowerSyncDatabase native module is not loaded');
+} else {
+  console.log('PowerSyncDatabase is ready');
+}
 import { OPSqliteOpenFactory } from '@powersync/op-sqlite'; // Add this import
 import { AppSchema } from './AppSchema';
 import { Connector } from './Connector';
