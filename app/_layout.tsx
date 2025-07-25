@@ -4,7 +4,7 @@ import { Slot } from 'expo-router';
 import './globals.css';
 import { PowerSyncProvider } from '@/powersync/PowersyncProvider';
 import { useEffect } from 'react';
-import { useSystem } from '@/powersync/system';
+// import { useSystem } from '@/powersync/system';
 import { SystemProvider } from '@/powersync/SystemProvider';
 
 export default function RootLayoutNav() {
@@ -15,11 +15,9 @@ export default function RootLayoutNav() {
   // }, []);
 
   return (
-    <SystemProvider>
-      <PowerSyncProvider>
-        <StatusBar hidden={true} />
-        <Slot />
-      </PowerSyncProvider>
-    </SystemProvider>
+    <>
+      <StatusBar hidden={true} />
+      <Slot />
+    </>
   );
 }

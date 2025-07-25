@@ -20,7 +20,7 @@ import Modal from 'react-native-modal';
 import DynamicIcon from '@/components/ui/DynamicIcon';
 
 import { Picker } from '@react-native-picker/picker';
-import { useSystem } from '@/powersync/system';
+// import { useSystem } from '@/powersync/system';
 
 import { CategoryRecord } from '@/powersync/AppSchema';
 
@@ -68,11 +68,11 @@ const { width } = Dimensions.get('window');
 const colorItemSize = (width - 64) / 5; // 5 columns, with 16px padding on each side (32 total), and 8px margin between items (4 * 8 = 32)
 
 const Categories = () => {
-  const system = useSystem();
+  // const system = useSystem();
 
-  useEffect(() => {
-    system.init();
-  }, []);
+  // useEffect(() => {
+  //   system.init();
+  // }, []);
 
   const [isModalVisible, setModalVisible] = useState(false);
   const [categoryIconName, setCategoryIconName] = useState(icons[12]);
@@ -90,7 +90,7 @@ const Categories = () => {
 
   const [selectedLanguage, setSelectedLanguage] = useState();
 
-  const { supabaseConnector, db } = useSystem();
+  // const { supabaseConnector, db } = useSystem();
   const handleEmojiSelect = (emoji: EmojiType) => {
     setSelectedEmoji(emoji);
     setIsEmojiPickerOpen(false);
@@ -134,7 +134,7 @@ const Categories = () => {
         bg_color: selectedColor,
       };
 
-      await db.insertInto('categories').values(newCategory).execute();
+      // await db.insertInto('categories').values(newCategory).execute();
     } catch (err) {
       console.error('Save error:', err);
       Alert.alert('Error', 'An unexpected error occurred while saving.');
