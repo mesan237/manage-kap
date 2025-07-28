@@ -11,7 +11,7 @@ import {
   FlatList,
   StyleSheet,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import EmojiPicker, { EmojiType } from 'rn-emoji-keyboard';
 import { Alert } from 'react-native';
@@ -20,10 +20,11 @@ import Modal from 'react-native-modal';
 import DynamicIcon from '@/components/ui/DynamicIcon';
 
 import { Picker } from '@react-native-picker/picker';
-// import { useSystem } from '@/powersync/system';
+import { SystemContext, useSystem } from '@/powersync/system';
 
 import { CategoryRecord } from '@/powersync/AppSchema';
-
+import uuid from 'react-native-uuid';
+import { ne } from '@faker-js/faker';
 // Predefined color palette for category background
 const colorPalette = [
   '#FF6B6B',
@@ -68,11 +69,11 @@ const { width } = Dimensions.get('window');
 const colorItemSize = (width - 64) / 5; // 5 columns, with 16px padding on each side (32 total), and 8px margin between items (4 * 8 = 32)
 
 const Categories = () => {
-  // const system = useSystem();
-
-  // useEffect(() => {
-  //   system.init();
-  // }, []);
+  const system = useContext(SystemContext);
+  useEffect(() => {
+    system?.init();
+  }, []);
+  const { db, supabaseConnector } = useSystem();
 
   const [isModalVisible, setModalVisible] = useState(false);
   const [categoryIconName, setCategoryIconName] = useState(icons[12]);
@@ -82,7 +83,7 @@ const Categories = () => {
   };
 
   const [categoryName, setCategoryName] = useState('');
-  const [categoryType, setCategoryType] = useState<'Expense' | 'Income'>('Expense');
+  const [categoryType, setCategoryType] = useState<'expense' | 'income'>('expense');
   const [selectedEmoji, setSelectedEmoji] = useState<EmojiType | null>(null);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
@@ -90,7 +91,6 @@ const Categories = () => {
 
   const [selectedLanguage, setSelectedLanguage] = useState();
 
-  // const { supabaseConnector, db } = useSystem();
   const handleEmojiSelect = (emoji: EmojiType) => {
     setSelectedEmoji(emoji);
     setIsEmojiPickerOpen(false);
@@ -111,11 +111,6 @@ const Categories = () => {
     }
 
     try {
-      // await db.execute(
-      //   'INSERT INTO categories (id, created_at, name, icon, type, bg_color) VALUES (uuid(), datetime(), ?, ?, ?, ?) RETURNING *',
-      //   [categoryName, categoryIconName, categoryType, selectedColor]
-      // );
-      // Watched queries should automatically reload after mutation
     } catch (ex) {
       // Alert.alert('Error', ex.message);
     }
@@ -123,18 +118,20 @@ const Categories = () => {
     setIsLoading(true);
     try {
       // In a real app, you'd get the user_id from Supabase auth
-      const userId = 'mock-user-uuid-123'; // Replace with actual user ID
+      const userId = uuid.v4(); // Replace with actual user ID
 
       const newCategory = {
         id: userId,
-        name: categoryName.trim(),
+        name: categoryName,
         type: categoryType,
         icon: categoryIconName,
-        // icon: selectedEmoji.emoji, // Store the emoji character
         bg_color: selectedColor,
       };
 
-      // await db.insertInto('categories').values(newCategory).execute();
+      await db.insertInto('categories').values(newCategory).execute();
+      const res = await db.selectFrom('categories').selectAll().execute();
+
+      console.log(res);
     } catch (err) {
       console.error('Save error:', err);
       Alert.alert('Error', 'An unexpected error occurred while saving.');
@@ -142,6 +139,7 @@ const Categories = () => {
       setIsLoading(false);
     }
   };
+
   return (
     <SafeAreaView className="flex-1 bg-gray-50" edges={['left', 'right', 'top']}>
       <ScrollView contentContainerStyle={{ padding: 20, paddingBottom: 40 }}>
@@ -165,13 +163,13 @@ const Categories = () => {
           <View className="flex flex-row bg-gray-200 rounded-lg overflow-hidden">
             <TouchableOpacity
               className={`flex-1 py-3 items-center justify-center ${
-                categoryType === 'Expense' ? 'bg-blue-600 rounded-lg' : ''
+                categoryType === 'expense' ? 'bg-blue-600 rounded-lg' : ''
               }`}
-              onPress={() => setCategoryType('Expense')}
+              onPress={() => setCategoryType('expense')}
             >
               <Text
                 className={`text-base font-medium ${
-                  categoryType === 'Expense' ? 'text-white' : 'text-gray-700'
+                  categoryType === 'expense' ? 'text-white' : 'text-gray-700'
                 }`}
               >
                 Expense
@@ -179,13 +177,13 @@ const Categories = () => {
             </TouchableOpacity>
             <TouchableOpacity
               className={`flex-1 py-3 items-center justify-center ${
-                categoryType === 'Income' ? 'bg-blue-600 rounded-lg' : ''
+                categoryType === 'income' ? 'bg-blue-600 rounded-lg' : ''
               }`}
-              onPress={() => setCategoryType('Income')}
+              onPress={() => setCategoryType('income')}
             >
               <Text
                 className={`text-base font-medium ${
-                  categoryType === 'Income' ? 'text-white' : 'text-gray-700'
+                  categoryType === 'income' ? 'text-white' : 'text-gray-700'
                 }`}
               >
                 Income

@@ -43,7 +43,7 @@ const TabLayout = () => {
       <Tabs.Screen
         name="addtransaction"
         options={{
-          title: 'Record',
+          title: '',
           tabBarIcon: ({ color, focused }) => (
             <View
               className=" p-2 rounded-md"

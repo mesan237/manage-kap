@@ -33,13 +33,6 @@ const Index = () => {
 
   return (
     <SafeAreaView className="bg-[#f9f9f9]" edges={['top', 'left', 'right']}>
-      {/* <LinearGradient
-        style={StyleSheet.absoluteFill}
-        colors={['cyan', 'lightgreen']}
-        start={{ x: 1, y: 0.25 }} 
-        end={{ x: 0, y: 1 }} 
-      /> */}
-
       <View className="flex flex-row justify-between items-center m-5 mb-0 rounded-md">
         <View className="flex justify-center gap-0.5">
           <InfoText className="  capitalize">Welcome Back, </InfoText>
@@ -68,8 +61,8 @@ const Index = () => {
         className="mx-5 mt-5 overflow-hidden bg-blue-400"
       >
         <View className="px-1 py-2 ">
-          <Subheading className="text-center text-white">Balance</Subheading>
-          <BodyText className="text-white text-xl font-inter-bold tracking-wide text-center">
+          <Subheading className="text-left text-white">Balance</Subheading>
+          <BodyText className="text-white text-xl font-inter-bold tracking-wide text-left">
             400 000<Text className="text-[10px]"> FCFA</Text>
           </BodyText>
           <View className="flex flex-row justify-between items-center ">
