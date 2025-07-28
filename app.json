@@ -73,6 +73,13 @@
     },
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "8e4e089d-c058-4b42-b4fd-0f47f2998aec"
+      }
+    },
+    "owner": "mesan237"
   }
 }
