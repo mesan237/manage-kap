@@ -23,6 +23,7 @@ export default function App() {
   return (
     <View>
       <Auth />
+      {session && <Text>session</Text>}
     </View>
   );
 }

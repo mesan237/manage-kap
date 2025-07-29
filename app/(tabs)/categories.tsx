@@ -83,7 +83,7 @@ const Categories = () => {
   };
 
   const [categoryName, setCategoryName] = useState('');
-  const [categoryType, setCategoryType] = useState<'expense' | 'income'>('expense');
+  const [categoryType, setCategoryType] = useState<'Expense' | 'Income'>('Expense');
   const [selectedEmoji, setSelectedEmoji] = useState<EmojiType | null>(null);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
@@ -163,13 +163,13 @@ const Categories = () => {
           <View className="flex flex-row bg-gray-200 rounded-lg overflow-hidden">
             <TouchableOpacity
               className={`flex-1 py-3 items-center justify-center ${
-                categoryType === 'expense' ? 'bg-blue-600 rounded-lg' : ''
+                categoryType === 'Expense' ? 'bg-blue-600 rounded-lg' : ''
               }`}
-              onPress={() => setCategoryType('expense')}
+              onPress={() => setCategoryType('Expense')}
             >
               <Text
                 className={`text-base font-medium ${
-                  categoryType === 'expense' ? 'text-white' : 'text-gray-700'
+                  categoryType === 'Expense' ? 'text-white' : 'text-gray-700'
                 }`}
               >
                 Expense
@@ -177,13 +177,13 @@ const Categories = () => {
             </TouchableOpacity>
             <TouchableOpacity
               className={`flex-1 py-3 items-center justify-center ${
-                categoryType === 'income' ? 'bg-blue-600 rounded-lg' : ''
+                categoryType === 'Income' ? 'bg-blue-600 rounded-lg' : ''
               }`}
-              onPress={() => setCategoryType('income')}
+              onPress={() => setCategoryType('Income')}
             >
               <Text
                 className={`text-base font-medium ${
-                  categoryType === 'income' ? 'text-white' : 'text-gray-700'
+                  categoryType === 'Income' ? 'text-white' : 'text-gray-700'
                 }`}
               >
                 Income
