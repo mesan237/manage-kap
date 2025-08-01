@@ -20,16 +20,16 @@ import { router } from 'expo-router';
 import HistoryTransaction from '@/components/HistoryTransaction';
 
 const Index = () => {
-  let [fontsLoaded] = useFonts({
-    'Inter-Var': require('../../assets/fonts/InterVar-Regular.ttf'),
-    'Inter-Var-Bold': require('../../assets/fonts/InterVar-Bold.ttf'),
-    'Inter-Var-Medium': require('../../assets/fonts/InterVar-Medium.ttf'),
-    'Inter-Var-SemiBold': require('../../assets/fonts/InterVar-SemiBold.ttf'),
-  });
+  // let [fontsLoaded] = useFonts({
+  //   'Inter-Var': require('../../assets/fonts/InterVar-Regular.ttf'),
+  //   'Inter-Var-Bold': require('../../assets/fonts/InterVar-Bold.ttf'),
+  //   'Inter-Var-Medium': require('../../assets/fonts/InterVar-Medium.ttf'),
+  //   'Inter-Var-SemiBold': require('../../assets/fonts/InterVar-SemiBold.ttf'),
+  // });
 
-  if (!fontsLoaded) {
-    return null;
-  }
+  // if (!fontsLoaded) {
+  //   return null;
+  // }
 
   return (
     <SafeAreaView className="bg-[#f9f9f9]" edges={['top', 'left', 'right']}>

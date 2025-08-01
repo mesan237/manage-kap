@@ -1,4 +1,3 @@
-import 'react-native-url-polyfill/auto';
 import { useState, useEffect } from 'react';
 import { View, Text } from 'react-native';
 import { Session } from '@supabase/supabase-js';

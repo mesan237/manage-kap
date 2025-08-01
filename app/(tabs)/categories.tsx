@@ -141,7 +141,7 @@ const Categories = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-50" edges={['left', 'right', 'top']}>
+    <SafeAreaView className="flex-1 mt-5" edges={['top', 'left', 'right']}>
       <ScrollView contentContainerStyle={{ padding: 20, paddingBottom: 40 }}>
         <Text className="text-3xl font-bold text-gray-800 mb-8 text-center">Add New Category</Text>
 
